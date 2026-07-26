@@ -42,6 +42,14 @@
             line-height: 1.5;
         }
 
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+
         .copy-btn {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
@@ -54,28 +62,61 @@
             transition: all 0.3s ease;
             box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
             min-height: 44px;
-            min-width: 120px;
             touch-action: manipulation;
         }
 
-        .copy-btn:hover {
+        .copy-btn.rlo-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .copy-btn.rlo-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        .copy-btn.rlo-btn.copied {
+            background: linear-gradient(135deg, #48c774 0%, #34b956 100%);
+            box-shadow: 0 4px 15px rgba(72, 199, 116, 0.4);
+        }
+
+        .copy-btn.pdf-btn {
+            background: linear-gradient(135deg, #ff9500 0%, #ff6b35 100%);
+            box-shadow: 0 4px 15px rgba(255, 149, 0, 0.4);
+        }
+
+        .copy-btn.pdf-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 149, 0, 0.6);
+        }
+
+        .copy-btn.pdf-btn.copied {
+            background: linear-gradient(135deg, #48c774 0%, #34b956 100%);
+            box-shadow: 0 4px 15px rgba(72, 199, 116, 0.4);
         }
 
         .copy-btn:active {
             transform: translateY(0);
         }
 
-        .copy-btn.copied {
-            background: linear-gradient(135deg, #48c774 0%, #34b956 100%);
-            box-shadow: 0 4px 15px rgba(72, 199, 116, 0.4);
+        .info-section {
+            text-align: left;
+            background: #f5f5f5;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-top: 1.5rem;
         }
 
-        .info-text {
-            font-size: 0.8rem;
-            color: #999;
-            margin-top: 1.5rem;
+        .info-label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.25rem;
+            margin-top: 1rem;
+        }
+
+        .info-label:first-child {
+            margin-top: 0;
         }
 
         /* Tablet/iPad optimizations (481px - 1024px) */
@@ -87,7 +128,7 @@
             .container {
                 padding: 2rem 2.5rem;
                 border-radius: 12px;
-                max-width: 500px;
+                max-width: 600px;
             }
 
             h1 {
@@ -100,17 +141,29 @@
                 margin-bottom: 1.75rem;
             }
 
+            .button-group {
+                gap: 1rem;
+                margin-bottom: 2rem;
+            }
+
             .copy-btn {
-                padding: 0.9rem 2.5rem;
+                padding: 0.9rem 2rem;
                 font-size: 1rem;
-                width: auto;
-                max-width: 300px;
                 min-height: 48px;
+                flex: 1;
+                max-width: 200px;
+            }
+
+            .info-section {
+                padding: 1.5rem;
+            }
+
+            .info-label {
+                font-size: 0.9rem;
             }
 
             .info-text {
                 font-size: 0.85rem;
-                margin-top: 1.5rem;
             }
         }
 
@@ -135,55 +188,80 @@
                 margin-bottom: 1.25rem;
             }
 
+            .button-group {
+                flex-direction: column;
+                gap: 0.75rem;
+                margin-bottom: 1.5rem;
+            }
+
             .copy-btn {
                 padding: 0.85rem 2rem;
                 font-size: 0.95rem;
                 width: 100%;
-                max-width: 280px;
+                min-height: 44px;
+            }
+
+            .info-section {
+                padding: 1rem;
+            }
+
+            .info-label {
+                font-size: 0.8rem;
             }
 
             .info-text {
                 font-size: 0.75rem;
-                margin-top: 1rem;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Copy RLO Character</h1>
-        <p>Click the button to copy the Right-to-Left Override character (U+202E) to your clipboard.</p>
-        <button class="copy-btn" id="copyBtn">Copy</button>
-        <p class="info-text">Character: [‮]</p>
+        <h1>Copy Unicode Direction Characters</h1>
+        <p>Click a button to copy the character to your clipboard.</p>
+        <div class="button-group">
+            <button class="copy-btn rlo-btn" id="copyRloBtn">Copy RLO</button>
+            <button class="copy-btn pdf-btn" id="copyPdfBtn">Copy PDF</button>
+        </div>
+        <div class="info-section">
+            <p class="info-label">RLO (Right-to-Left Override):</p>
+            <p class="info-text">[‮]</p>
+            <p class="info-label">PDF (Pop Directional Formatting):</p>
+            <p class="info-text">[‬]</p>
+        </div>
     </div>
 
     <script>
-        const copyBtn = document.getElementById('copyBtn');
         const RLO_CHAR = '\u202E'; // Right-to-Left Override
+        const PDF_CHAR = '\u202C'; // Pop Directional Formatting
 
-        copyBtn.addEventListener('click', async () => {
-            try {
-                // Copy the RLO character to clipboard
-                await navigator.clipboard.writeText(RLO_CHAR);
+        const copyRloBtn = document.getElementById('copyRloBtn');
+        const copyPdfBtn = document.getElementById('copyPdfBtn');
 
-                // Visual feedback: change button text and style
-                const originalText = copyBtn.textContent;
-                copyBtn.textContent = 'Copied!';
-                copyBtn.classList.add('copied');
+        function handleCopy(button, character) {
+            navigator.clipboard.writeText(character)
+                .then(() => {
+                    const originalText = button.textContent;
+                    button.textContent = 'Copied!';
+                    button.classList.add('copied');
 
-                // Revert after 2 seconds
-                setTimeout(() => {
-                    copyBtn.textContent = originalText;
-                    copyBtn.classList.remove('copied');
-                }, 2000);
-            } catch (err) {
-                console.error('Failed to copy to clipboard:', err);
-                copyBtn.textContent = 'Failed!';
-                setTimeout(() => {
-                    copyBtn.textContent = 'Copy';
-                }, 2000);
-            }
-        });
+                    setTimeout(() => {
+                        button.textContent = originalText;
+                        button.classList.remove('copied');
+                    }, 2000);
+                })
+                .catch(err => {
+                    console.error('Failed to copy to clipboard:', err);
+                    const originalText = button.textContent;
+                    button.textContent = 'Failed!';
+                    setTimeout(() => {
+                        button.textContent = originalText;
+                    }, 2000);
+                });
+        }
+
+        copyRloBtn.addEventListener('click', () => handleCopy(copyRloBtn, RLO_CHAR));
+        copyPdfBtn.addEventListener('click', () => handleCopy(copyPdfBtn, PDF_CHAR));
     </script>
 </body>
 </html>
