@@ -3,14 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Unicode Toolkit</title>
+    <title>Unicode Toolkit Pro</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -20,28 +15,32 @@
             align-items: flex-start;
             padding: 2rem 1rem;
         }
-
         .container {
             background: white;
             padding: 2rem;
             border-radius: 12px;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             width: 100%;
-            max-width: 1200px;
+            max-width: 1300px;
         }
-
-        h1 {
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
-            color: #333;
-        }
-
-        p {
-            font-size: 0.9rem;
-            color: #666;
+        h1 { font-size: 1.5rem; margin-bottom: 0.5rem; color: #333; }
+        .search-box {
+            display: flex;
+            gap: 0.5rem;
             margin-bottom: 1.5rem;
         }
-
+        #searchInput {
+            flex: 1;
+            padding: 0.75rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 6px;
+            font-size: 0.95rem;
+        }
+        #searchInput:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
         .test-box {
             background: #f9fafb;
             border: 2px solid #e5e7eb;
@@ -49,13 +48,7 @@
             padding: 1.5rem;
             margin-bottom: 2rem;
         }
-
-        .test-box h2 {
-            font-size: 1rem;
-            color: #333;
-            margin-bottom: 0.75rem;
-        }
-
+        .test-box h2 { font-size: 1rem; color: #333; margin-bottom: 0.75rem; }
         #testInput {
             width: 100%;
             padding: 0.75rem;
@@ -64,473 +57,473 @@
             font-size: 0.95rem;
             margin-bottom: 0.75rem;
             font-family: monospace;
+            min-height: 80px;
+            resize: vertical;
         }
-
-        #testOutput {
+        .test-outputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        .output-section {
             background: white;
             border: 1px solid #d1d5db;
             border-radius: 6px;
-            padding: 1rem;
-            font-size: 0.95rem;
-            word-break: break-all;
-            min-height: 60px;
-            color: #333;
+            padding: 0.75rem;
         }
-
-        .character-cards {
-            display: flex;
-            flex-direction: column;
-            gap: 2rem;
-        }
-
-        .card-section {
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-        }
-
-        .section-header {
-            font-size: 0.95rem;
-            font-weight: 700;
+        .output-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 0.5rem;
             text-transform: uppercase;
-            letter-spacing: 1px;
+        }
+        .output-content {
+            font-size: 0.9rem;
             color: #333;
-            padding-bottom: 0.75rem;
-            border-bottom: 3px solid #f0f0f0;
+            word-break: break-all;
+            min-height: 40px;
+            font-family: monospace;
+            line-height: 1.4;
         }
-
-        .character-card {
-            background: #fafafa;
-            border-left: 4px solid #667eea;
+        .security-box {
+            background: #fef3c7;
+            border: 1px solid #f59e0b;
             border-radius: 6px;
-            padding: 1rem;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            font-size: 0.85rem;
         }
-
-        .char-item {
+        .security-item {
             display: flex;
-            gap: 0.75rem;
-            margin-bottom: 0.75rem;
-            padding-bottom: 0.75rem;
-            border-bottom: 1px solid #e5e7eb;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.25rem;
         }
-
-        .char-item:last-child {
-            margin-bottom: 0;
-            padding-bottom: 0;
-            border-bottom: none;
+        .security-item:last-child { margin-bottom: 0; }
+        .security-risk { color: #dc2626; font-weight: 600; }
+        .security-warning { color: #d97706; }
+        .security-safe { color: #16a34a; }
+        .char-counter {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
         }
-
-        .copy-btn {
+        .counter-item {
+            background: #f3f4f6;
+            border-radius: 6px;
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        .counter-num { color: #667eea; font-size: 1.1rem; margin-right: 0.25rem; }
+        .character-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .char-card {
+            background: #fafafa;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .char-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1);
+            transform: translateY(-2px);
+        }
+        .char-button {
+            width: 100%;
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
             color: white;
             border: none;
-            padding: 0.5rem 0.8rem;
-            font-size: 0.85rem;
-            font-weight: 700;
             border-radius: 4px;
             cursor: pointer;
-            transition: all 0.2s ease;
-            min-height: 36px;
-            min-width: 45px;
-            touch-action: manipulation;
-            flex-shrink: 0;
+            font-weight: 700;
+            transition: all 0.2s;
         }
+        .char-button:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); }
+        .char-button.copied { background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important; }
+        .char-title { font-weight: 600; font-size: 0.9rem; color: #333; margin-bottom: 0.25rem; }
+        .char-code { font-size: 0.75rem; color: #999; font-family: monospace; }
+        .char-desc { font-size: 0.8rem; color: #666; margin-top: 0.5rem; }
+        
+        .mark-btn { background: linear-gradient(135deg, #64748b 0%, #475569 100%); }
+        .embed-btn { background: linear-gradient(135deg, #a855f7 0%, #9333ea 100%); }
+        .override-btn { background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%); }
+        .isolate-btn { background: linear-gradient(135deg, #84cc16 0%, #65a30d 100%); }
+        .zwspace-btn { background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%); }
+        .word-btn { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
+        .space-btn { background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); }
+        .math-btn { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); }
+        .arrow-btn { background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); }
+        .punct-btn { background: linear-gradient(135deg, #ec4899 0%, #db2777 100%); }
+        .bullet-btn { background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%); }
+        .star-btn { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
+        .curr-btn { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
+        .frac-btn { background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%); }
+        .super-btn { background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); }
+        .letter-btn { background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); }
 
-        .copy-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
         }
-
-        .copy-btn:active {
-            transform: translateY(0);
+        .modal.active { display: flex; align-items: center; justify-content: center; }
+        .modal-content {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
         }
-
-        .copy-btn.copied {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
-        }
-
-        .char-info {
-            flex: 1;
-        }
-
-        .char-title {
-            font-weight: 600;
-            color: #333;
-            font-size: 0.9rem;
-            margin-bottom: 0.25rem;
-        }
-
-        .char-desc {
-            font-size: 0.8rem;
-            color: #666;
-            margin-bottom: 0.25rem;
-        }
-
-        .char-example {
-            font-size: 0.75rem;
+        .modal-close {
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
             color: #999;
-            font-style: italic;
         }
-
-        .copy-btn.mark-btn { background: linear-gradient(135deg, #64748b 0%, #475569 100%); }
-        .copy-btn.embed-btn { background: linear-gradient(135deg, #a855f7 0%, #9333ea 100%); }
-        .copy-btn.override-btn { background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%); }
-        .copy-btn.isolate-btn { background: linear-gradient(135deg, #84cc16 0%, #65a30d 100%); }
-        .copy-btn.zwspace-btn { background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%); }
-        .copy-btn.word-btn { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
-        .copy-btn.space-btn { background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); }
-        .copy-btn.math-btn { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); }
-        .copy-btn.arrow-btn { background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); }
-        .copy-btn.punct-btn { background: linear-gradient(135deg, #ec4899 0%, #db2777 100%); }
-        .copy-btn.bullet-btn { background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%); }
-        .copy-btn.star-btn { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
-        .copy-btn.curr-btn { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
-        .copy-btn.frac-btn { background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%); }
-        .copy-btn.super-btn { background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); }
-        .copy-btn.letter-btn { background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); }
-
+        .modal-close:hover { color: #333; }
+        .modal-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            margin-top: 0;
+        }
+        .modal-field {
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .modal-field:last-child { border-bottom: none; }
+        .modal-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #666;
+            text-transform: uppercase;
+            margin-bottom: 0.25rem;
+        }
+        .modal-value {
+            font-size: 0.95rem;
+            color: #333;
+            font-family: monospace;
+            word-break: break-all;
+        }
         @media (max-width: 768px) {
             .container { padding: 1rem; }
-            h1 { font-size: 1.2rem; }
-            .char-item { flex-direction: column; gap: 0.5rem; }
-            .copy-btn { min-width: 40px; padding: 0.4rem 0.6rem; font-size: 0.75rem; }
-            .char-title { font-size: 0.85rem; }
-            .char-desc { font-size: 0.75rem; }
+            .test-outputs { grid-template-columns: 1fr; }
+            .character-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+            .char-card { padding: 0.75rem; }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Unicode Toolkit</h1>
-        <p>Copy symbols and test them in real-time below.</p>
+        <h1>Unicode Toolkit Pro</h1>
         
-        <div class="test-box">
-            <h2>Test Characters Live</h2>
-            <textarea id="testInput" placeholder="Type here or paste copied characters to test their effects..."></textarea>
-            <div style="margin-bottom: 0.75rem;">
-                <strong style="font-size: 0.85rem; color: #666;">Output (how it renders):</strong>
-            </div>
-            <div id="testOutput"></div>
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Search characters... (e.g., 'joiner', 'arrow', 'space')">
         </div>
 
-        <div class="character-cards">
-            <div class="card-section">
-                <h2 class="section-header">Directional Marks & Embeddings</h2>
-                <div class="character-card">
-                    <div class="char-item">
-                        <button class="copy-btn mark-btn" data-char="&#x200E;">LRM</button>
-                        <div class="char-info">
-                            <div class="char-title">Left-to-Right Mark (LRM)</div>
-                            <div class="char-desc">Invisible mark forcing next text LTR</div>
-                            <div class="char-example">Ex: "Hello‮עברית‬" with LRM fix</div>
-                        </div>
-                    </div>
-                    <div class="char-item">
-                        <button class="copy-btn mark-btn" data-char="&#x200F;">RLM</button>
-                        <div class="char-info">
-                            <div class="char-title">Right-to-Left Mark (RLM)</div>
-                            <div class="char-desc">Invisible mark forcing next text RTL</div>
-                            <div class="char-example">Ex: "English ‏עברית" mix fixed</div>
-                        </div>
-                    </div>
-                    <div class="char-item">
-                        <button class="copy-btn mark-btn" data-char="&#x061C;">ALM</button>
-                        <div class="char-info">
-                            <div class="char-title">Arabic Letter Mark (ALM)</div>
-                            <div class="char-desc">Directs Arabic/Hebrew without affecting context</div>
-                            <div class="char-example">Ex: Smart bidirectional handling</div>
-                        </div>
-                    </div>
-                    <div class="char-item">
-                        <button class="copy-btn embed-btn" data-char="&#x202A;">LRE</button>
-                        <div class="char-info">
-                            <div class="char-title">Left-to-Right Embedding (LRE)</div>
-                            <div class="char-desc">Creates LTR text block until PDF</div>
-                            <div class="char-example">Ex: ‪All text here is forced LTR‬</div>
-                        </div>
-                    </div>
-                    <div class="char-item">
-                        <button class="copy-btn embed-btn" data-char="&#x202B;">RLE</button>
-                        <div class="char-info">
-                            <div class="char-title">Right-to-Left Embedding (RLE)</div>
-                            <div class="char-desc">Creates RTL text block until PDF</div>
-                            <div class="char-example">Ex: ‫All text here is forced RTL‬</div>
-                        </div>
-                    </div>
-                    <div class="char-item">
-                        <button class="copy-btn embed-btn" data-char="&#x202C;">PDF</button>
-                        <div class="char-info">
-                            <div class="char-title">Pop Directional Formatting (PDF)</div>
-                            <div class="char-desc">Cancels any embedding or override</div>
-                            <div class="char-example">Ex: ‮reversed‬ back to normal</div>
-                        </div>
-                    </div>
-                    <div class="char-item">
-                        <button class="copy-btn override-btn" data-char="&#x202D;">LRO</button>
-                        <div class="char-info">
-                            <div class="char-title">Left-to-Right Override (LRO)</div>
-                            <div class="char-desc">Forcefully overrides text to LTR</div>
-                            <div class="char-example">Ex: ‭עברית is now LTR!‬</div>
-                        </div>
-                    </div>
-                    <div class="char-item">
-                        <button class="copy-btn override-btn" data-char="&#x202E;">RLO</button>
-                        <div class="char-info">
-                            <div class="char-title">Right-to-Left Override (RLO)</div>
-                            <div class="char-desc">Forcefully reverses text direction</div>
-                            <div class="char-example">Ex: ‮completely reversed!‬</div>
-                        </div>
-                    </div>
-                    <div class="char-item">
-                        <button class="copy-btn isolate-btn" data-char="&#x2066;">LRI</button>
-                        <div class="char-info">
-                            <div class="char-title">Left-to-Right Isolate (LRI)</div>
-                            <div class="char-desc">Modern LTR isolation (better than LRE)</div>
-                            <div class="char-example">Ex: ⁦LRI isolates cleanly⁩</div>
-                        </div>
-                    </div>
-                    <div class="char-item">
-                        <button class="copy-btn isolate-btn" data-char="&#x2067;">RLI</button>
-                        <div class="char-info">
-                            <div class="char-title">Right-to-Left Isolate (RLI)</div>
-                            <div class="char-desc">Modern RTL isolation (better than RLE)</div>
-                            <div class="char-example">Ex: ⁧RLI isolates cleanly⁩</div>
-                        </div>
-                    </div>
-                    <div class="char-item">
-                        <button class="copy-btn isolate-btn" data-char="&#x2068;">FSI</button>
-                        <div class="char-info">
-                            <div class="char-title">First Strong Isolate (FSI)</div>
-                            <div class="char-desc">Auto-detects direction from first character</div>
-                            <div class="char-example">Ex: ⁨Smart auto-detect⁩</div>
-                        </div>
-                    </div>
-                    <div class="char-item">
-                        <button class="copy-btn isolate-btn" data-char="&#x2069;">PDI</button>
-                        <div class="char-info">
-                            <div class="char-title">Pop Directional Isolate (PDI)</div>
-                            <div class="char-desc">Ends isolate (modern replacement for PDF)</div>
-                            <div class="char-example">Ex: ⁧isolate⁩ back to normal</div>
-                        </div>
-                    </div>
+        <div class="test-box">
+            <h2>Test Characters Live</h2>
+            <textarea id="testInput" placeholder="Type or paste copied characters to test..."></textarea>
+            
+            <div class="char-counter" id="charCounter"></div>
+            
+            <div id="securityBox" class="security-box" style="display: none;"></div>
+            
+            <div class="test-outputs">
+                <div class="output-section">
+                    <div class="output-label">Visual Output</div>
+                    <div class="output-content" id="visualOutput"></div>
+                </div>
+                <div class="output-section">
+                    <div class="output-label">Hex Bytes (UTF-8)</div>
+                    <div class="output-content" id="hexOutput"></div>
                 </div>
             </div>
 
-            <div class="card-section">
-                <h2 class="section-header">Zero-Width & Invisible Characters</h2>
-                <div class="character-card">
-                    <div class="char-item">
-                        <button class="copy-btn zwspace-btn" data-char="&#x200B;">ZWS</button>
-                        <div class="char-info">
-                            <div class="char-title">Zero Width Space</div>
-                            <div class="char-desc">Invisible space for line breaks</div>
-                            <div class="char-example">Ex: long-url-that‌needs‌breaks</div>
-                        </div>
-                    </div>
-                    <div class="char-item">
-                        <button class="copy-btn zwspace-btn" data-char="&#x200C;">ZWNJ</button>
-                        <div class="char-info">
-                            <div class="char-title">Zero Width Non-Joiner</div>
-                            <div class="char-desc">Prevents character joining in Arabic/Farsi</div>
-                            <div class="char-example">Ex: Separates‌joining chars</div>
-                        </div>
-                    </div>
-                    <div class="char-item">
-                        <button class="copy-btn zwspace-btn" data-char="&#x200D;">ZWJ</button>
-                        <div class="char-info">
-                            <div class="char-title">Zero Width Joiner</div>
-                            <div class="char-desc">Forces character joining (emoji sequences)</div>
-                            <div class="char-example">Ex: 👨‍👩‍👧 family emoji</div>
-                        </div>
-                    </div>
-                    <div class="char-item">
-                        <button class="copy-btn word-btn" data-char="&#x2060;">WJ</button>
-                        <div class="char-info">
-                            <div class="char-title">Word Joiner</div>
-                            <div class="char-desc">Keeps words together without line breaks</div>
-                            <div class="char-example">Ex: non⁠breaking-URL</div>
-                        </div>
-                    </div>
-                    <div class="char-item">
-                        <button class="copy-btn word-btn" data-char="&#x00AD;">SHy</button>
-                        <div class="char-info">
-                            <div class="char-title">Soft Hyphen</div>
-                            <div class="char-desc">Invisible hyphen (shows only if wrapped)</div>
-                            <div class="char-example">Ex: hyphen­ated-word</div>
-                        </div>
-                    </div>
-                    <div class="char-item">
-                        <button class="copy-btn word-btn" data-char="&#x2011;">-NBH</button>
-                        <div class="char-info">
-                            <div class="char-title">Non-Breaking Hyphen</div>
-                            <div class="char-desc">Hyphen that prevents line breaks</div>
-                            <div class="char-example">Ex: mother‑in‑law</div>
-                        </div>
-                    </div>
-                    <div class="char-item">
-                        <button class="copy-btn word-btn" data-char="&#x00A0;">NBSP</button>
-                        <div class="char-info">
-                            <div class="char-title">Non-Breaking Space</div>
-                            <div class="char-desc">Space that prevents line wrapping</div>
-                            <div class="char-example">Ex: Mr.&nbsp;Smith stays together</div>
-                        </div>
-                    </div>
-                </div>
+            <div class="output-section">
+                <div class="output-label">Character Breakdown (with hidden chars revealed)</div>
+                <div class="output-content" id="highlightOutput" style="background: white; border: 1px solid #d1d5db; border-radius: 6px; padding: 0.75rem;"></div>
             </div>
+        </div>
 
-            <div class="card-section">
-                <h2 class="section-header">Typographic Spaces</h2>
-                <div class="character-card">
-                    <div class="char-item">
-                        <button class="copy-btn space-btn" data-char="&#x2002;">EnSp</button>
-                        <div class="char-info">
-                            <div class="char-title">En Space</div>
-                            <div class="char-desc">Width of letter 'N' (professional typography)</div>
-                            <div class="char-example">Ex: spaced words</div>
-                        </div>
-                    </div>
-                    <div class="char-item">
-                        <button class="copy-btn space-btn" data-char="&#x2003;">EmSp</button>
-                        <div class="char-info">
-                            <div class="char-title">Em Space</div>
-                            <div class="char-desc">Width of letter 'M' (largest standard space)</div>
-                            <div class="char-example">Ex: large   gap</div>
-                        </div>
-                    </div>
-                    <div class="char-item">
-                        <button class="copy-btn space-btn" data-char="&#x2004;">3PE</button>
-                        <div class="char-info">
-                            <div class="char-title">Three-Per-Em Space</div>
-                            <div class="char-desc">1/3 em width (precise spacing)</div>
-                            <div class="char-example">Ex: medium  gap</div>
-                        </div>
-                    </div>
-                    <div class="char-item">
-                        <button class="copy-btn space-btn" data-char="&#x2005;">4PE</button>
-                        <div class="char-info">
-                            <div class="char-title">Four-Per-Em Space</div>
-                            <div class="char-desc">1/4 em width (fine spacing)</div>
-                            <div class="char-example">Ex: fine  gap</div>
-                        </div>
-                    </div>
-                    <div class="char-item">
-                        <button class="copy-btn space-btn" data-char="&#x2009;">ThSp</button>
-                        <div class="char-info">
-                            <div class="char-title">Thin Space</div>
-                            <div class="char-desc">Very small space for typography</div>
-                            <div class="char-example">Ex: thin gap</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div class="character-grid" id="characterGrid"></div>
+    </div>
 
-            <div class="card-section">
-                <h2 class="section-header">Math (26)</h2>
-                <div class="character-card">
-                    <div class="char-item">
-                        <button class="copy-btn math-btn" data-char="&#x00D7;">×</button>
-                        <button class="copy-btn math-btn" data-char="&#x00F7;">÷</button>
-                        <button class="copy-btn math-btn" data-char="&#x00B1;">±</button>
-                        <button class="copy-btn math-btn" data-char="&#x2260;">≠</button>
-                        <button class="copy-btn math-btn" data-char="&#x2248;">≈</button>
-                        <button class="copy-btn math-btn" data-char="&#x221E;">∞</button>
-                        <button class="copy-btn math-btn" data-char="&#x221A;">√</button>
-                        <button class="copy-btn math-btn" data-char="&#x221B;">∛</button>
-                        <button class="copy-btn math-btn" data-char="&#x221C;">∜</button>
-                        <button class="copy-btn math-btn" data-char="&#x2211;">∑</button>
-                        <button class="copy-btn math-btn" data-char="&#x220F;">∏</button>
-                        <button class="copy-btn math-btn" data-char="&#x222B;">∫</button>
-                        <button class="copy-btn math-btn" data-char="&#x2202;">∂</button>
-                        <button class="copy-btn math-btn" data-char="&#x2207;">∇</button>
-                        <button class="copy-btn math-btn" data-char="&#x2264;">≤</button>
-                        <button class="copy-btn math-btn" data-char="&#x2265;">≥</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card-section">
-                <h2 class="section-header">Arrows (16)</h2>
-                <div class="character-card">
-                    <div class="char-item">
-                        <button class="copy-btn arrow-btn" data-char="&#x2192;">→</button>
-                        <button class="copy-btn arrow-btn" data-char="&#x2190;">←</button>
-                        <button class="copy-btn arrow-btn" data-char="&#x2191;">↑</button>
-                        <button class="copy-btn arrow-btn" data-char="&#x2193;">↓</button>
-                        <button class="copy-btn arrow-btn" data-char="&#x2194;">↔</button>
-                        <button class="copy-btn arrow-btn" data-char="&#x21D2;">⇒</button>
-                        <button class="copy-btn arrow-btn" data-char="&#x21D0;">⇐</button>
-                        <button class="copy-btn arrow-btn" data-char="&#x21D4;">⇔</button>
-                        <button class="copy-btn arrow-btn" data-char="&#x2197;">↗</button>
-                        <button class="copy-btn arrow-btn" data-char="&#x2196;">↖</button>
-                        <button class="copy-btn arrow-btn" data-char="&#x2199;">↙</button>
-                        <button class="copy-btn arrow-btn" data-char="&#x2198;">↘</button>
-                        <button class="copy-btn arrow-btn" data-char="&#x27F6;">⟶</button>
-                        <button class="copy-btn arrow-btn" data-char="&#x27F5;">⟵</button>
-                        <button class="copy-btn arrow-btn" data-char="&#x27F7;">⟷</button>
-                        <button class="copy-btn arrow-btn" data-char="&#x27FC;">⟼</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card-section">
-                <h2 class="section-header">Symbols & Misc (40+)</h2>
-                <div class="character-card">
-                    <div class="char-item">
-                        <button class="copy-btn curr-btn" data-char="$">$</button>
-                        <button class="copy-btn curr-btn" data-char="&#x20AC;">€</button>
-                        <button class="copy-btn curr-btn" data-char="&#xA3;">£</button>
-                        <button class="copy-btn curr-btn" data-char="&#xA5;">¥</button>
-                        <button class="copy-btn bullet-btn" data-char="&#x2022;">•</button>
-                        <button class="copy-btn bullet-btn" data-char="&#x25A0;">■</button>
-                        <button class="copy-btn bullet-btn" data-char="&#x25A1;">□</button>
-                        <button class="copy-btn star-btn" data-char="&#x2605;">★</button>
-                        <button class="copy-btn star-btn" data-char="&#x2606;">☆</button>
-                        <button class="copy-btn star-btn" data-char="&#x2713;">✓</button>
-                        <button class="copy-btn punct-btn" data-char="&#x2026;">…</button>
-                        <button class="copy-btn punct-btn" data-char="&#xB6;">¶</button>
-                        <button class="copy-btn letter-btn" data-char="&#xB0;">°</button>
-                        <button class="copy-btn letter-btn" data-char="&#xA9;">©</button>
-                        <button class="copy-btn letter-btn" data-char="&#xAE;">®</button>
-                        <button class="copy-btn frac-btn" data-char="&#xBD;">½</button>
-                        <button class="copy-btn frac-btn" data-char="&#xBC;">¼</button>
-                        <button class="copy-btn frac-btn" data-char="&#xBE;">¾</button>
-                        <button class="copy-btn super-btn" data-char="&#xB2;">²</button>
-                        <button class="copy-btn super-btn" data-char="&#xB3;">³</button>
-                    </div>
-                </div>
-            </div>
+    <div id="inspectModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <h3 class="modal-title" id="modalTitle"></h3>
+            <div id="modalBody"></div>
         </div>
     </div>
 
     <script>
-        function decodeHtmlEntity(str) {
-            const textarea = document.createElement('textarea');
-            textarea.innerHTML = str;
-            return textarea.value;
+        const charData = [
+            { name: 'Left-to-Right Mark', code: 0x200E, cat: 'mark', abbr: 'LRM', desc: 'Invisible mark forcing next text LTR', tags: 'direction ltr' },
+            { name: 'Right-to-Left Mark', code: 0x200F, cat: 'mark', abbr: 'RLM', desc: 'Invisible mark forcing next text RTL', tags: 'direction rtl' },
+            { name: 'Arabic Letter Mark', code: 0x061C, cat: 'mark', abbr: 'ALM', desc: 'Smart bidirectional handling', tags: 'direction arabic' },
+            { name: 'LTR Embedding', code: 0x202A, cat: 'embed', abbr: 'LRE', desc: 'Creates LTR text block until PDF', tags: 'direction ltr' },
+            { name: 'RTL Embedding', code: 0x202B, cat: 'embed', abbr: 'RLE', desc: 'Creates RTL text block until PDF', tags: 'direction rtl' },
+            { name: 'Pop Formatting', code: 0x202C, cat: 'embed', abbr: 'PDF', desc: 'Cancels any embedding or override', tags: 'direction control' },
+            { name: 'LTR Override', code: 0x202D, cat: 'override', abbr: 'LRO', desc: 'Forcefully overrides text to LTR', tags: 'direction ltr override' },
+            { name: 'RTL Override', code: 0x202E, cat: 'override', abbr: 'RLO', desc: 'Forcefully reverses text direction', tags: 'direction rtl override reverse' },
+            { name: 'LTR Isolate', code: 0x2066, cat: 'isolate', abbr: 'LRI', desc: 'Modern LTR isolation (better than LRE)', tags: 'direction ltr' },
+            { name: 'RTL Isolate', code: 0x2067, cat: 'isolate', abbr: 'RLI', desc: 'Modern RTL isolation (better than RLE)', tags: 'direction rtl' },
+            { name: 'First Strong Isolate', code: 0x2068, cat: 'isolate', abbr: 'FSI', desc: 'Auto-detects direction from first character', tags: 'direction auto' },
+            { name: 'Pop Directional Isolate', code: 0x2069, cat: 'isolate', abbr: 'PDI', desc: 'Ends isolate (modern replacement for PDF)', tags: 'direction control' },
+            { name: 'Zero Width Space', code: 0x200B, cat: 'zwspace', abbr: 'ZWS', desc: 'Invisible space for line breaks', tags: 'zero-width space' },
+            { name: 'Zero Width Non-Joiner', code: 0x200C, cat: 'zwspace', abbr: 'ZWNJ', desc: 'Prevents character joining in Arabic/Farsi', tags: 'zero-width joiner' },
+            { name: 'Zero Width Joiner', code: 0x200D, cat: 'zwspace', abbr: 'ZWJ', desc: 'Forces character joining (emoji sequences)', tags: 'zero-width joiner emoji' },
+            { name: 'Word Joiner', code: 0x2060, cat: 'word', abbr: 'WJ', desc: 'Keeps words together without line breaks', tags: 'joiner line-break' },
+            { name: 'Soft Hyphen', code: 0x00AD, cat: 'word', abbr: 'SHy', desc: 'Invisible hyphen (shows only if wrapped)', tags: 'hyphen line-break' },
+            { name: 'Non-Breaking Hyphen', code: 0x2011, cat: 'word', abbr: 'NBHy', desc: 'Hyphen that prevents line breaks', tags: 'hyphen line-break' },
+            { name: 'Non-Breaking Space', code: 0x00A0, cat: 'word', abbr: 'NBSP', desc: 'Space that prevents line wrapping', tags: 'space line-break' },
+            { name: 'En Space', code: 0x2002, cat: 'space', abbr: 'EnSp', desc: 'Width of letter N', tags: 'space typography' },
+            { name: 'Em Space', code: 0x2003, cat: 'space', abbr: 'EmSp', desc: 'Width of letter M', tags: 'space typography' },
+            { name: 'Thin Space', code: 0x2009, cat: 'space', abbr: 'ThSp', desc: 'Very small space for typography', tags: 'space typography' },
+            { name: 'Multiplication', code: 0x00D7, cat: 'math', abbr: '×', desc: 'Math multiplication operator', tags: 'math operator' },
+            { name: 'Division', code: 0x00F7, cat: 'math', abbr: '÷', desc: 'Math division operator', tags: 'math operator' },
+            { name: 'Plus-Minus', code: 0x00B1, cat: 'math', abbr: '±', desc: 'Plus-minus operator', tags: 'math operator' },
+            { name: 'Not Equal', code: 0x2260, cat: 'math', abbr: '≠', desc: 'Not equal to', tags: 'math operator' },
+            { name: 'Approx', code: 0x2248, cat: 'math', abbr: '≈', desc: 'Approximately equal', tags: 'math operator' },
+            { name: 'Infinity', code: 0x221E, cat: 'math', abbr: '∞', desc: 'Infinity symbol', tags: 'math symbol' },
+            { name: 'Square Root', code: 0x221A, cat: 'math', abbr: '√', desc: 'Square root symbol', tags: 'math symbol' },
+            { name: 'Cube Root', code: 0x221B, cat: 'math', abbr: '∛', desc: 'Cube root symbol', tags: 'math symbol' },
+            { name: 'Rightwards Arrow', code: 0x2192, cat: 'arrow', abbr: '→', desc: 'Right arrow', tags: 'arrow direction' },
+            { name: 'Leftwards Arrow', code: 0x2190, cat: 'arrow', abbr: '←', desc: 'Left arrow', tags: 'arrow direction' },
+            { name: 'Upwards Arrow', code: 0x2191, cat: 'arrow', abbr: '↑', desc: 'Up arrow', tags: 'arrow direction' },
+            { name: 'Downwards Arrow', code: 0x2193, cat: 'arrow', abbr: '↓', desc: 'Down arrow', tags: 'arrow direction' },
+            { name: 'Left Right Arrow', code: 0x2194, cat: 'arrow', abbr: '↔', desc: 'Bidirectional arrow', tags: 'arrow direction' },
+            { name: 'Bullet', code: 0x2022, cat: 'bullet', abbr: '•', desc: 'Bullet point', tags: 'symbol list' },
+            { name: 'Black Square', code: 0x25A0, cat: 'bullet', abbr: '■', desc: 'Black square bullet', tags: 'symbol list' },
+            { name: 'White Square', code: 0x25A1, cat: 'bullet', abbr: '□', desc: 'White square bullet', tags: 'symbol list' },
+            { name: 'Black Star', code: 0x2605, cat: 'star', abbr: '★', desc: 'Black star', tags: 'symbol star' },
+            { name: 'White Star', code: 0x2606, cat: 'star', abbr: '☆', desc: 'White star', tags: 'symbol star' },
+            { name: 'Check Mark', code: 0x2713, cat: 'star', abbr: '✓', desc: 'Checkmark', tags: 'symbol check' },
+            { name: 'Dollar Sign', code: 0x0024, cat: 'curr', abbr: '$', desc: 'Dollar currency', tags: 'currency money' },
+            { name: 'Euro Sign', code: 0x20AC, cat: 'curr', abbr: '€', desc: 'Euro currency', tags: 'currency money' },
+            { name: 'Pound Sign', code: 0x00A3, cat: 'curr', abbr: '£', desc: 'Pound currency', tags: 'currency money' },
+            { name: 'Yen Sign', code: 0x00A5, cat: 'curr', abbr: '¥', desc: 'Yen currency', tags: 'currency money' },
+            { name: 'Half', code: 0x00BD, cat: 'frac', abbr: '½', desc: 'One half fraction', tags: 'fraction math' },
+            { name: 'Quarter', code: 0x00BC, cat: 'frac', abbr: '¼', desc: 'One quarter fraction', tags: 'fraction math' },
+            { name: 'Three Quarters', code: 0x00BE, cat: 'frac', abbr: '¾', desc: 'Three quarters fraction', tags: 'fraction math' },
+            { name: 'Superscript Two', code: 0x00B2, cat: 'super', abbr: '²', desc: 'Superscript 2', tags: 'superscript math' },
+            { name: 'Superscript Three', code: 0x00B3, cat: 'super', abbr: '³', desc: 'Superscript 3', tags: 'superscript math' },
+            { name: 'Degree Sign', code: 0x00B0, cat: 'letter', abbr: '°', desc: 'Degree symbol', tags: 'symbol temperature' },
+            { name: 'Copyright', code: 0x00A9, cat: 'letter', abbr: '©', desc: 'Copyright symbol', tags: 'symbol copyright' },
+            { name: 'Registered', code: 0x00AE, cat: 'letter', abbr: '®', desc: 'Registered trademark', tags: 'symbol trademark' },
+            { name: 'Ellipsis', code: 0x2026, cat: 'punct', abbr: '…', desc: 'Horizontal ellipsis', tags: 'punctuation' },
+            { name: 'Pilcrow', code: 0x00B6, cat: 'punct', abbr: '¶', desc: 'Paragraph mark', tags: 'punctuation' },
+        ];
+
+        const modal = document.getElementById('inspectModal');
+        const modalClose = document.querySelector('.modal-close');
+        const searchInput = document.getElementById('searchInput');
+        const testInput = document.getElementById('testInput');
+        const visualOutput = document.getElementById('visualOutput');
+        const hexOutput = document.getElementById('hexOutput');
+        const highlightOutput = document.getElementById('highlightOutput');
+        const charCounter = document.getElementById('charCounter');
+        const securityBox = document.getElementById('securityBox');
+        const characterGrid = document.getElementById('characterGrid');
+
+        function charToUtf8Hex(char) {
+            const encoded = new TextEncoder().encode(char);
+            return Array.from(encoded).map(b => b.toString(16).toUpperCase().padStart(2, '0')).join(' ');
         }
 
-        document.querySelectorAll('.copy-btn').forEach(button => {
-            button.addEventListener('click', () => {
-                let character = button.getAttribute('data-char');
-                character = decodeHtmlEntity(character);
+        function charToUtf16Hex(char) {
+            const code = char.charCodeAt(0);
+            return code.toString(16).toUpperCase().padStart(4, '0');
+        }
+
+        function renderCharacters(filter = '') {
+            characterGrid.innerHTML = '';
+            const filtered = charData.filter(c => 
+                c.name.toLowerCase().includes(filter.toLowerCase()) ||
+                c.abbr.toLowerCase().includes(filter.toLowerCase()) ||
+                c.tags.includes(filter.toLowerCase()) ||
+                c.desc.toLowerCase().includes(filter.toLowerCase())
+            );
+
+            filtered.forEach(char => {
+                const charCode = String.fromCharCode(char.code);
+                const hex = charToUtf16Hex(charCode);
+                const card = document.createElement('div');
+                card.className = 'char-card';
                 
-                navigator.clipboard.writeText(character).then(() => {
-                    const originalText = button.textContent;
-                    button.textContent = 'Copied!';
-                    button.classList.add('copied');
-                    setTimeout(() => {
-                        button.textContent = originalText;
-                        button.classList.remove('copied');
-                    }, 2000);
-                }).catch(err => console.error('Failed:', err));
+                let catClass = 'mark-btn';
+                if (char.cat === 'embed') catClass = 'embed-btn';
+                else if (char.cat === 'override') catClass = 'override-btn';
+                else if (char.cat === 'isolate') catClass = 'isolate-btn';
+                else if (char.cat === 'zwspace') catClass = 'zwspace-btn';
+                else if (char.cat === 'word') catClass = 'word-btn';
+                else if (char.cat === 'space') catClass = 'space-btn';
+                else if (char.cat === 'math') catClass = 'math-btn';
+                else if (char.cat === 'arrow') catClass = 'arrow-btn';
+                else if (char.cat === 'bullet') catClass = 'bullet-btn';
+                else if (char.cat === 'star') catClass = 'star-btn';
+                else if (char.cat === 'curr') catClass = 'curr-btn';
+                else if (char.cat === 'frac') catClass = 'frac-btn';
+                else if (char.cat === 'super') catClass = 'super-btn';
+                else if (char.cat === 'letter') catClass = 'letter-btn';
+                else if (char.cat === 'punct') catClass = 'punct-btn';
+
+                card.innerHTML = `
+                    <button class="char-button ${catClass}" data-code="${char.code}">Copy</button>
+                    <div class="char-title">${char.abbr}</div>
+                    <div class="char-code">U+${hex}</div>
+                    <div class="char-desc">${char.desc}</div>
+                `;
+
+                card.querySelector('button').addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const charCode = String.fromCharCode(char.code);
+                    navigator.clipboard.writeText(charCode).then(() => {
+                        const btn = e.target;
+                        const original = btn.textContent;
+                        btn.textContent = 'Copied!';
+                        btn.classList.add('copied');
+                        setTimeout(() => {
+                            btn.textContent = original;
+                            btn.classList.remove('copied');
+                        }, 2000);
+                    });
+                });
+
+                card.addEventListener('click', () => {
+                    const charCode = String.fromCharCode(char.code);
+                    const utf8 = charToUtf8Hex(charCode);
+                    const utf16 = charToUtf16Hex(charCode);
+                    
+                    document.getElementById('modalTitle').textContent = char.name;
+                    document.getElementById('modalBody').innerHTML = `
+                        <div class="modal-field">
+                            <div class="modal-label">Abbreviation</div>
+                            <div class="modal-value">${char.abbr}</div>
+                        </div>
+                        <div class="modal-field">
+                            <div class="modal-label">Character</div>
+                            <div class="modal-value">${char.code < 32 || char.code === 0xAD || (char.code >= 0x200B && char.code <= 0x200D) || char.code === 0x061C ? '[Invisible]' : charCode}</div>
+                        </div>
+                        <div class="modal-field">
+                            <div class="modal-label">Unicode Code Point</div>
+                            <div class="modal-value">U+${utf16}</div>
+                        </div>
+                        <div class="modal-field">
+                            <div class="modal-label">UTF-8 Bytes</div>
+                            <div class="modal-value">${utf8}</div>
+                        </div>
+                        <div class="modal-field">
+                            <div class="modal-label">UTF-16 Code Unit</div>
+                            <div class="modal-value">${utf16}</div>
+                        </div>
+                        <div class="modal-field">
+                            <div class="modal-label">Category</div>
+                            <div class="modal-value">${char.cat}</div>
+                        </div>
+                        <div class="modal-field">
+                            <div class="modal-label">Description</div>
+                            <div class="modal-value">${char.desc}</div>
+                        </div>
+                        <div class="modal-field">
+                            <div class="modal-label">Properties</div>
+                            <div class="modal-value">${char.code < 32 || char.code === 0xAD || (char.code >= 0x200B && char.code <= 0x200D) || char.code === 0x061C || char.code === 0x202A || char.code === 0x202B || char.code === 0x202C || char.code === 0x202D || char.code === 0x202E ? '✓ Invisible/Control' : ''} ${(char.code >= 0x2000 && char.code <= 0x200F) || char.code === 0x00AD ? '✓ BiDi/Formatting' : ''}</div>
+                        </div>
+                    `;
+                    modal.classList.add('active');
+                });
+
+                characterGrid.appendChild(card);
             });
-        });
+        }
 
-        const testInput = document.getElementById('testInput');
-        const testOutput = document.getElementById('testOutput');
+        function updateTestOutput() {
+            const text = testInput.value;
+            visualOutput.textContent = text || '(empty)';
+            
+            if (text) {
+                const hexBytes = Array.from(text).map(char => charToUtf8Hex(char)).join(' | ');
+                hexOutput.textContent = hexBytes;
+                
+                let highlighted = '';
+                const biDiChars = [0x200E, 0x200F, 0x061C, 0x202A, 0x202B, 0x202C, 0x202D, 0x202E, 0x2066, 0x2067, 0x2068, 0x2069];
+                const zwChars = [0x200B, 0x200C, 0x200D, 0x2060, 0x00AD, 0x2011, 0x00A0];
+                
+                for (let char of text) {
+                    const code = char.charCodeAt(0);
+                    if (biDiChars.includes(code)) {
+                        const found = charData.find(c => c.code === code);
+                        highlighted += `[${found?.abbr || 'UNKNOWN'}]`;
+                    } else if (zwChars.includes(code)) {
+                        const found = charData.find(c => c.code === code);
+                        highlighted += `[${found?.abbr || 'UNKNOWN'}]`;
+                    } else {
+                        highlighted += char;
+                    }
+                }
+                highlightOutput.textContent = highlighted;
+                
+                const visibleCount = text.replace(/[\u200B\u200C\u200D\u2060\u00AD\u2011\u00A0\u200E\u200F\u061C\u202A\u202B\u202C\u202D\u202E\u2066\u2067\u2068\u2069]/g, '').length;
+                const invisibleCount = text.length - visibleCount;
+                const biDiCount = (text.match(/[\u200E\u200F\u061C\u202A\u202B\u202C\u202D\u202E\u2066\u2067\u2068\u2069]/g) || []).length;
+                
+                charCounter.innerHTML = `
+                    <div class="counter-item"><span class="counter-num">${text.length}</span>Total</div>
+                    <div class="counter-item"><span class="counter-num">${visibleCount}</span>Visible</div>
+                    <div class="counter-item"><span class="counter-num">${invisibleCount}</span>Invisible</div>
+                    <div class="counter-item"><span class="counter-num">${biDiCount}</span>BiDi</div>
+                `;
+                
+                if (biDiCount > 0 || invisibleCount > 2) {
+                    let riskLevel = 'LOW';
+                    let warnings = [];
+                    if (biDiCount > 0) { warnings.push('Contains BiDi control characters'); riskLevel = 'MEDIUM'; }
+                    if (invisibleCount > 3) { warnings.push('Contains multiple invisible characters'); riskLevel = 'HIGH'; }
+                    if (text.match(/[\u202E]/)) { warnings.push('Contains RLO (reversal) character'); riskLevel = 'HIGH'; }
+                    
+                    securityBox.innerHTML = `
+                        <div class="security-item"><span class="security-${riskLevel === 'HIGH' ? 'risk' : 'warning'}">⚠ Risk Level: ${riskLevel}</span></div>
+                        ${warnings.map(w => `<div class="security-item"><span class="security-warning">• ${w}</span></div>`).join('')}
+                    `;
+                    securityBox.style.display = 'block';
+                } else {
+                    securityBox.style.display = 'none';
+                }
+            } else {
+                hexOutput.textContent = '(empty)';
+                highlightOutput.textContent = '(empty)';
+                charCounter.innerHTML = '';
+                securityBox.style.display = 'none';
+            }
+        }
 
-        testInput.addEventListener('input', () => {
-            testOutput.textContent = testInput.value;
-        });
+        searchInput.addEventListener('input', () => renderCharacters(searchInput.value));
+        testInput.addEventListener('input', updateTestOutput);
+        modalClose.addEventListener('click', () => modal.classList.remove('active'));
+        modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('active'); });
+
+        renderCharacters();
     </script>
 </body>
 </html>
