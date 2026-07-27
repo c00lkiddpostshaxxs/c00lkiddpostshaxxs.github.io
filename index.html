@@ -39,7 +39,42 @@
         p {
             font-size: 0.9rem;
             color: #666;
+            margin-bottom: 1.5rem;
+        }
+
+        .test-box {
+            background: #f9fafb;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 1.5rem;
             margin-bottom: 2rem;
+        }
+
+        .test-box h2 {
+            font-size: 1rem;
+            color: #333;
+            margin-bottom: 0.75rem;
+        }
+
+        #testInput {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            margin-bottom: 0.75rem;
+            font-family: monospace;
+        }
+
+        #testOutput {
+            background: white;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            padding: 1rem;
+            font-size: 0.95rem;
+            word-break: break-all;
+            min-height: 60px;
+            color: #333;
         }
 
         .character-cards {
@@ -51,7 +86,7 @@
         .card-section {
             display: flex;
             flex-direction: column;
-            gap: 1rem;
+            gap: 0.75rem;
         }
 
         .section-header {
@@ -71,11 +106,18 @@
             padding: 1rem;
         }
 
-        .card-header {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(45px, 1fr));
-            gap: 0.4rem;
+        .char-item {
+            display: flex;
+            gap: 0.75rem;
             margin-bottom: 0.75rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .char-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
         }
 
         .copy-btn {
@@ -88,10 +130,9 @@
             cursor: pointer;
             transition: all 0.2s ease;
             min-height: 36px;
+            min-width: 45px;
             touch-action: manipulation;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            flex-shrink: 0;
         }
 
         .copy-btn:hover {
@@ -107,6 +148,29 @@
             background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
         }
 
+        .char-info {
+            flex: 1;
+        }
+
+        .char-title {
+            font-weight: 600;
+            color: #333;
+            font-size: 0.9rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .char-desc {
+            font-size: 0.8rem;
+            color: #666;
+            margin-bottom: 0.25rem;
+        }
+
+        .char-example {
+            font-size: 0.75rem;
+            color: #999;
+            font-style: italic;
+        }
+
         .copy-btn.mark-btn { background: linear-gradient(135deg, #64748b 0%, #475569 100%); }
         .copy-btn.embed-btn { background: linear-gradient(135deg, #a855f7 0%, #9333ea 100%); }
         .copy-btn.override-btn { background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%); }
@@ -114,106 +178,258 @@
         .copy-btn.zwspace-btn { background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%); }
         .copy-btn.word-btn { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
         .copy-btn.space-btn { background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); }
-        .copy-btn.special-btn { background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%); }
         .copy-btn.math-btn { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); }
         .copy-btn.arrow-btn { background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); }
         .copy-btn.punct-btn { background: linear-gradient(135deg, #ec4899 0%, #db2777 100%); }
         .copy-btn.bullet-btn { background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%); }
         .copy-btn.star-btn { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
-        .copy-btn.box-btn { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); }
+        .copy-btn.curr-btn { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
         .copy-btn.frac-btn { background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%); }
         .copy-btn.super-btn { background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); }
-        .copy-btn.curr-btn { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
         .copy-btn.letter-btn { background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); }
-        .copy-btn.unit-btn { background: linear-gradient(135deg, #d946ef 0%, #c026d3 100%); }
 
         @media (max-width: 768px) {
-            .container {
-                padding: 1rem;
-            }
-            h1 {
-                font-size: 1.2rem;
-            }
-            .card-header {
-                grid-template-columns: repeat(auto-fit, minmax(40px, 1fr));
-                gap: 0.3rem;
-            }
-            .copy-btn {
-                padding: 0.4rem 0.6rem;
-                font-size: 0.75rem;
-                min-height: 32px;
-            }
+            .container { padding: 1rem; }
+            h1 { font-size: 1.2rem; }
+            .char-item { flex-direction: column; gap: 0.5rem; }
+            .copy-btn { min-width: 40px; padding: 0.4rem 0.6rem; font-size: 0.75rem; }
+            .char-title { font-size: 0.85rem; }
+            .char-desc { font-size: 0.75rem; }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Unicode Toolkit</h1>
-        <p>Click any button to copy the character.</p>
+        <p>Copy symbols and test them in real-time below.</p>
         
+        <div class="test-box">
+            <h2>Test Characters Live</h2>
+            <textarea id="testInput" placeholder="Type here or paste copied characters to test their effects..."></textarea>
+            <div style="margin-bottom: 0.75rem;">
+                <strong style="font-size: 0.85rem; color: #666;">Output (how it renders):</strong>
+            </div>
+            <div id="testOutput"></div>
+        </div>
+
         <div class="character-cards">
             <div class="card-section">
-                <h2 class="section-header">Directional Marks</h2>
+                <h2 class="section-header">Directional Marks & Embeddings</h2>
                 <div class="character-card">
-                    <div class="card-header">
+                    <div class="char-item">
                         <button class="copy-btn mark-btn" data-char="&#x200E;">LRM</button>
+                        <div class="char-info">
+                            <div class="char-title">Left-to-Right Mark (LRM)</div>
+                            <div class="char-desc">Invisible mark forcing next text LTR</div>
+                            <div class="char-example">Ex: "Hello‮עברית‬" with LRM fix</div>
+                        </div>
+                    </div>
+                    <div class="char-item">
                         <button class="copy-btn mark-btn" data-char="&#x200F;">RLM</button>
+                        <div class="char-info">
+                            <div class="char-title">Right-to-Left Mark (RLM)</div>
+                            <div class="char-desc">Invisible mark forcing next text RTL</div>
+                            <div class="char-example">Ex: "English ‏עברית" mix fixed</div>
+                        </div>
+                    </div>
+                    <div class="char-item">
                         <button class="copy-btn mark-btn" data-char="&#x061C;">ALM</button>
+                        <div class="char-info">
+                            <div class="char-title">Arabic Letter Mark (ALM)</div>
+                            <div class="char-desc">Directs Arabic/Hebrew without affecting context</div>
+                            <div class="char-example">Ex: Smart bidirectional handling</div>
+                        </div>
+                    </div>
+                    <div class="char-item">
                         <button class="copy-btn embed-btn" data-char="&#x202A;">LRE</button>
+                        <div class="char-info">
+                            <div class="char-title">Left-to-Right Embedding (LRE)</div>
+                            <div class="char-desc">Creates LTR text block until PDF</div>
+                            <div class="char-example">Ex: ‪All text here is forced LTR‬</div>
+                        </div>
+                    </div>
+                    <div class="char-item">
                         <button class="copy-btn embed-btn" data-char="&#x202B;">RLE</button>
+                        <div class="char-info">
+                            <div class="char-title">Right-to-Left Embedding (RLE)</div>
+                            <div class="char-desc">Creates RTL text block until PDF</div>
+                            <div class="char-example">Ex: ‫All text here is forced RTL‬</div>
+                        </div>
+                    </div>
+                    <div class="char-item">
                         <button class="copy-btn embed-btn" data-char="&#x202C;">PDF</button>
+                        <div class="char-info">
+                            <div class="char-title">Pop Directional Formatting (PDF)</div>
+                            <div class="char-desc">Cancels any embedding or override</div>
+                            <div class="char-example">Ex: ‮reversed‬ back to normal</div>
+                        </div>
+                    </div>
+                    <div class="char-item">
                         <button class="copy-btn override-btn" data-char="&#x202D;">LRO</button>
+                        <div class="char-info">
+                            <div class="char-title">Left-to-Right Override (LRO)</div>
+                            <div class="char-desc">Forcefully overrides text to LTR</div>
+                            <div class="char-example">Ex: ‭עברית is now LTR!‬</div>
+                        </div>
+                    </div>
+                    <div class="char-item">
                         <button class="copy-btn override-btn" data-char="&#x202E;">RLO</button>
+                        <div class="char-info">
+                            <div class="char-title">Right-to-Left Override (RLO)</div>
+                            <div class="char-desc">Forcefully reverses text direction</div>
+                            <div class="char-example">Ex: ‮completely reversed!‬</div>
+                        </div>
+                    </div>
+                    <div class="char-item">
                         <button class="copy-btn isolate-btn" data-char="&#x2066;">LRI</button>
+                        <div class="char-info">
+                            <div class="char-title">Left-to-Right Isolate (LRI)</div>
+                            <div class="char-desc">Modern LTR isolation (better than LRE)</div>
+                            <div class="char-example">Ex: ⁦LRI isolates cleanly⁩</div>
+                        </div>
+                    </div>
+                    <div class="char-item">
                         <button class="copy-btn isolate-btn" data-char="&#x2067;">RLI</button>
+                        <div class="char-info">
+                            <div class="char-title">Right-to-Left Isolate (RLI)</div>
+                            <div class="char-desc">Modern RTL isolation (better than RLE)</div>
+                            <div class="char-example">Ex: ⁧RLI isolates cleanly⁩</div>
+                        </div>
+                    </div>
+                    <div class="char-item">
                         <button class="copy-btn isolate-btn" data-char="&#x2068;">FSI</button>
+                        <div class="char-info">
+                            <div class="char-title">First Strong Isolate (FSI)</div>
+                            <div class="char-desc">Auto-detects direction from first character</div>
+                            <div class="char-example">Ex: ⁨Smart auto-detect⁩</div>
+                        </div>
+                    </div>
+                    <div class="char-item">
                         <button class="copy-btn isolate-btn" data-char="&#x2069;">PDI</button>
+                        <div class="char-info">
+                            <div class="char-title">Pop Directional Isolate (PDI)</div>
+                            <div class="char-desc">Ends isolate (modern replacement for PDF)</div>
+                            <div class="char-example">Ex: ⁧isolate⁩ back to normal</div>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <div class="card-section">
-                <h2 class="section-header">Zero-Width Characters</h2>
+                <h2 class="section-header">Zero-Width & Invisible Characters</h2>
                 <div class="character-card">
-                    <div class="card-header">
+                    <div class="char-item">
                         <button class="copy-btn zwspace-btn" data-char="&#x200B;">ZWS</button>
+                        <div class="char-info">
+                            <div class="char-title">Zero Width Space</div>
+                            <div class="char-desc">Invisible space for line breaks</div>
+                            <div class="char-example">Ex: long-url-that‌needs‌breaks</div>
+                        </div>
+                    </div>
+                    <div class="char-item">
                         <button class="copy-btn zwspace-btn" data-char="&#x200C;">ZWNJ</button>
+                        <div class="char-info">
+                            <div class="char-title">Zero Width Non-Joiner</div>
+                            <div class="char-desc">Prevents character joining in Arabic/Farsi</div>
+                            <div class="char-example">Ex: Separates‌joining chars</div>
+                        </div>
+                    </div>
+                    <div class="char-item">
                         <button class="copy-btn zwspace-btn" data-char="&#x200D;">ZWJ</button>
-                        <button class="copy-btn zwspace-btn" data-char="&#x200A;">Hair</button>
+                        <div class="char-info">
+                            <div class="char-title">Zero Width Joiner</div>
+                            <div class="char-desc">Forces character joining (emoji sequences)</div>
+                            <div class="char-example">Ex: 👨‍👩‍👧 family emoji</div>
+                        </div>
+                    </div>
+                    <div class="char-item">
                         <button class="copy-btn word-btn" data-char="&#x2060;">WJ</button>
+                        <div class="char-info">
+                            <div class="char-title">Word Joiner</div>
+                            <div class="char-desc">Keeps words together without line breaks</div>
+                            <div class="char-example">Ex: non⁠breaking-URL</div>
+                        </div>
+                    </div>
+                    <div class="char-item">
                         <button class="copy-btn word-btn" data-char="&#x00AD;">SHy</button>
-                        <button class="copy-btn word-btn" data-char="&#x2011;">-NBHy</button>
+                        <div class="char-info">
+                            <div class="char-title">Soft Hyphen</div>
+                            <div class="char-desc">Invisible hyphen (shows only if wrapped)</div>
+                            <div class="char-example">Ex: hyphen­ated-word</div>
+                        </div>
+                    </div>
+                    <div class="char-item">
+                        <button class="copy-btn word-btn" data-char="&#x2011;">-NBH</button>
+                        <div class="char-info">
+                            <div class="char-title">Non-Breaking Hyphen</div>
+                            <div class="char-desc">Hyphen that prevents line breaks</div>
+                            <div class="char-example">Ex: mother‑in‑law</div>
+                        </div>
+                    </div>
+                    <div class="char-item">
                         <button class="copy-btn word-btn" data-char="&#x00A0;">NBSP</button>
+                        <div class="char-info">
+                            <div class="char-title">Non-Breaking Space</div>
+                            <div class="char-desc">Space that prevents line wrapping</div>
+                            <div class="char-example">Ex: Mr.&nbsp;Smith stays together</div>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <div class="card-section">
-                <h2 class="section-header">Spaces</h2>
+                <h2 class="section-header">Typographic Spaces</h2>
                 <div class="character-card">
-                    <div class="card-header">
+                    <div class="char-item">
                         <button class="copy-btn space-btn" data-char="&#x2002;">EnSp</button>
+                        <div class="char-info">
+                            <div class="char-title">En Space</div>
+                            <div class="char-desc">Width of letter 'N' (professional typography)</div>
+                            <div class="char-example">Ex: spaced words</div>
+                        </div>
+                    </div>
+                    <div class="char-item">
                         <button class="copy-btn space-btn" data-char="&#x2003;">EmSp</button>
-                        <button class="copy-btn space-btn" data-char="&#x2004;">3PEM</button>
-                        <button class="copy-btn space-btn" data-char="&#x2005;">4PEM</button>
-                        <button class="copy-btn space-btn" data-char="&#x2006;">6PEM</button>
-                        <button class="copy-btn space-btn" data-char="&#x2007;">FigSp</button>
-                        <button class="copy-btn space-btn" data-char="&#x2008;">PunSp</button>
-                        <button class="copy-btn space-btn" data-char="&#x2009;">ThnSp</button>
+                        <div class="char-info">
+                            <div class="char-title">Em Space</div>
+                            <div class="char-desc">Width of letter 'M' (largest standard space)</div>
+                            <div class="char-example">Ex: large   gap</div>
+                        </div>
+                    </div>
+                    <div class="char-item">
+                        <button class="copy-btn space-btn" data-char="&#x2004;">3PE</button>
+                        <div class="char-info">
+                            <div class="char-title">Three-Per-Em Space</div>
+                            <div class="char-desc">1/3 em width (precise spacing)</div>
+                            <div class="char-example">Ex: medium  gap</div>
+                        </div>
+                    </div>
+                    <div class="char-item">
+                        <button class="copy-btn space-btn" data-char="&#x2005;">4PE</button>
+                        <div class="char-info">
+                            <div class="char-title">Four-Per-Em Space</div>
+                            <div class="char-desc">1/4 em width (fine spacing)</div>
+                            <div class="char-example">Ex: fine  gap</div>
+                        </div>
+                    </div>
+                    <div class="char-item">
+                        <button class="copy-btn space-btn" data-char="&#x2009;">ThSp</button>
+                        <div class="char-info">
+                            <div class="char-title">Thin Space</div>
+                            <div class="char-desc">Very small space for typography</div>
+                            <div class="char-example">Ex: thin gap</div>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <div class="card-section">
-                <h2 class="section-header">Math Operators</h2>
+                <h2 class="section-header">Math (26)</h2>
                 <div class="character-card">
-                    <div class="card-header">
-                        <button class="copy-btn math-btn" data-char="+">+</button>
-                        <button class="copy-btn math-btn" data-char="&#x2212;">−</button>
-                        <button class="copy-btn math-btn" data-char="&#x00B1;">±</button>
+                    <div class="char-item">
                         <button class="copy-btn math-btn" data-char="&#x00D7;">×</button>
                         <button class="copy-btn math-btn" data-char="&#x00F7;">÷</button>
-                        <button class="copy-btn math-btn" data-char="=">=</button>
+                        <button class="copy-btn math-btn" data-char="&#x00B1;">±</button>
                         <button class="copy-btn math-btn" data-char="&#x2260;">≠</button>
                         <button class="copy-btn math-btn" data-char="&#x2248;">≈</button>
                         <button class="copy-btn math-btn" data-char="&#x221E;">∞</button>
@@ -225,219 +441,60 @@
                         <button class="copy-btn math-btn" data-char="&#x222B;">∫</button>
                         <button class="copy-btn math-btn" data-char="&#x2202;">∂</button>
                         <button class="copy-btn math-btn" data-char="&#x2207;">∇</button>
-                        <button class="copy-btn math-btn" data-char="&lt;">&lt;</button>
-                        <button class="copy-btn math-btn" data-char="&gt;">&gt;</button>
                         <button class="copy-btn math-btn" data-char="&#x2264;">≤</button>
                         <button class="copy-btn math-btn" data-char="&#x2265;">≥</button>
-                        <button class="copy-btn math-btn" data-char="%">%</button>
-                        <button class="copy-btn math-btn" data-char="&#x2030;">‰</button>
-                        <button class="copy-btn math-btn" data-char="&#x221D;">∝</button>
-                        <button class="copy-btn math-btn" data-char="&#x2234;">∴</button>
-                        <button class="copy-btn math-btn" data-char="&#x2235;">∵</button>
                     </div>
                 </div>
             </div>
 
             <div class="card-section">
-                <h2 class="section-header">Arrows (26)</h2>
+                <h2 class="section-header">Arrows (16)</h2>
                 <div class="character-card">
-                    <div class="card-header">
+                    <div class="char-item">
                         <button class="copy-btn arrow-btn" data-char="&#x2192;">→</button>
                         <button class="copy-btn arrow-btn" data-char="&#x2190;">←</button>
                         <button class="copy-btn arrow-btn" data-char="&#x2191;">↑</button>
                         <button class="copy-btn arrow-btn" data-char="&#x2193;">↓</button>
                         <button class="copy-btn arrow-btn" data-char="&#x2194;">↔</button>
-                        <button class="copy-btn arrow-btn" data-char="&#x2195;">↕</button>
                         <button class="copy-btn arrow-btn" data-char="&#x21D2;">⇒</button>
                         <button class="copy-btn arrow-btn" data-char="&#x21D0;">⇐</button>
-                        <button class="copy-btn arrow-btn" data-char="&#x21D1;">⇑</button>
-                        <button class="copy-btn arrow-btn" data-char="&#x21D3;">⇓</button>
                         <button class="copy-btn arrow-btn" data-char="&#x21D4;">⇔</button>
-                        <button class="copy-btn arrow-btn" data-char="&#x21D5;">⇕</button>
                         <button class="copy-btn arrow-btn" data-char="&#x2197;">↗</button>
                         <button class="copy-btn arrow-btn" data-char="&#x2196;">↖</button>
                         <button class="copy-btn arrow-btn" data-char="&#x2199;">↙</button>
                         <button class="copy-btn arrow-btn" data-char="&#x2198;">↘</button>
-                        <button class="copy-btn arrow-btn" data-char="&#x27BA;">➚</button>
-                        <button class="copy-btn arrow-btn" data-char="&#x27A4;">➤</button>
-                        <button class="copy-btn arrow-btn" data-char="&#x27A1;">➡</button>
-                        <button class="copy-btn arrow-btn" data-char="&#x2794;">➔</button>
                         <button class="copy-btn arrow-btn" data-char="&#x27F6;">⟶</button>
                         <button class="copy-btn arrow-btn" data-char="&#x27F5;">⟵</button>
                         <button class="copy-btn arrow-btn" data-char="&#x27F7;">⟷</button>
-                        <button class="copy-btn arrow-btn" data-char="&#x27F9;">⟹</button>
-                        <button class="copy-btn arrow-btn" data-char="&#x27FA;">⟺</button>
                         <button class="copy-btn arrow-btn" data-char="&#x27FC;">⟼</button>
                     </div>
                 </div>
             </div>
 
             <div class="card-section">
-                <h2 class="section-header">Punctuation</h2>
+                <h2 class="section-header">Symbols & Misc (40+)</h2>
                 <div class="character-card">
-                    <div class="card-header">
-                        <button class="copy-btn punct-btn" data-char="&#x2018;">'</button>
-                        <button class="copy-btn punct-btn" data-char="&#x2019;">'</button>
-                        <button class="copy-btn punct-btn" data-char="&#x201C;">"</button>
-                        <button class="copy-btn punct-btn" data-char="&#x201D;">"</button>
-                        <button class="copy-btn punct-btn" data-char="&#xAB;">«</button>
-                        <button class="copy-btn punct-btn" data-char="&#xBB;">»</button>
-                        <button class="copy-btn punct-btn" data-char="&#x2039;">‹</button>
-                        <button class="copy-btn punct-btn" data-char="&#x203A;">›</button>
-                        <button class="copy-btn punct-btn" data-char="&#x2026;">…</button>
-                        <button class="copy-btn punct-btn" data-char="&#x203D;">‽</button>
-                        <button class="copy-btn punct-btn" data-char="&#x2047;">⁇</button>
-                        <button class="copy-btn punct-btn" data-char="&#x2049;">⁉</button>
-                        <button class="copy-btn punct-btn" data-char="&#xB6;">¶</button>
-                        <button class="copy-btn punct-btn" data-char="&#xA7;">§</button>
-                        <button class="copy-btn punct-btn" data-char="&#x2020;">†</button>
-                        <button class="copy-btn punct-btn" data-char="&#x2021;">‡</button>
-                        <button class="copy-btn punct-btn" data-char="&#xBF;">¿</button>
-                        <button class="copy-btn punct-btn" data-char="&#xA1;">¡</button>
-                        <button class="copy-btn punct-btn" data-char="&#x203F;">‿</button>
-                        <button class="copy-btn punct-btn" data-char="&#x2040;">⁀</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card-section">
-                <h2 class="section-header">Bullets & Shapes</h2>
-                <div class="character-card">
-                    <div class="card-header">
-                        <button class="copy-btn bullet-btn" data-char="&#x2022;">•</button>
-                        <button class="copy-btn bullet-btn" data-char="&#x25E6;">◦</button>
-                        <button class="copy-btn bullet-btn" data-char="&#x25AA;">▪</button>
-                        <button class="copy-btn bullet-btn" data-char="&#x25AB;">▫</button>
-                        <button class="copy-btn bullet-btn" data-char="&#x25C9;">◉</button>
-                        <button class="copy-btn bullet-btn" data-char="&#x25CE;">◎</button>
-                        <button class="copy-btn bullet-btn" data-char="&#x25CF;">●</button>
-                        <button class="copy-btn bullet-btn" data-char="&#x25CB;">○</button>
-                        <button class="copy-btn bullet-btn" data-char="&#x25A0;">■</button>
-                        <button class="copy-btn bullet-btn" data-char="&#x25A1;">□</button>
-                        <button class="copy-btn bullet-btn" data-char="&#x25B2;">▲</button>
-                        <button class="copy-btn bullet-btn" data-char="&#x25B3;">△</button>
-                        <button class="copy-btn bullet-btn" data-char="&#x25BC;">▼</button>
-                        <button class="copy-btn bullet-btn" data-char="&#x25BD;">▽</button>
-                        <button class="copy-btn bullet-btn" data-char="&#x25C0;">◀</button>
-                        <button class="copy-btn bullet-btn" data-char="&#x25B6;">▶</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card-section">
-                <h2 class="section-header">Stars & Marks</h2>
-                <div class="character-card">
-                    <div class="card-header">
-                        <button class="copy-btn star-btn" data-char="&#x2605;">★</button>
-                        <button class="copy-btn star-btn" data-char="&#x2606;">☆</button>
-                        <button class="copy-btn star-btn" data-char="&#x2713;">✓</button>
-                        <button class="copy-btn star-btn" data-char="&#x2714;">✔</button>
-                        <button class="copy-btn star-btn" data-char="&#x2717;">✗</button>
-                        <button class="copy-btn star-btn" data-char="&#x2718;">✘</button>
-                        <button class="copy-btn star-btn" data-char="&#x271D;">✝</button>
-                        <button class="copy-btn star-btn" data-char="&#x271E;">✞</button>
-                        <button class="copy-btn star-btn" data-char="&#x2606;">☆</button>
-                        <button class="copy-btn star-btn" data-char="&#x2605;">★</button>
-                        <button class="copy-btn star-btn" data-char="&#x272D;">✭</button>
-                        <button class="copy-btn star-btn" data-char="&#x272E;">✮</button>
-                        <button class="copy-btn star-btn" data-char="&#x2661;">♡</button>
-                        <button class="copy-btn star-btn" data-char="&#x2665;">♥</button>
-                        <button class="copy-btn star-btn" data-char="&#x2663;">♣</button>
-                        <button class="copy-btn star-btn" data-char="&#x2666;">♦</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card-section">
-                <h2 class="section-header">Currency</h2>
-                <div class="character-card">
-                    <div class="card-header">
+                    <div class="char-item">
                         <button class="copy-btn curr-btn" data-char="$">$</button>
                         <button class="copy-btn curr-btn" data-char="&#x20AC;">€</button>
                         <button class="copy-btn curr-btn" data-char="&#xA3;">£</button>
                         <button class="copy-btn curr-btn" data-char="&#xA5;">¥</button>
-                        <button class="copy-btn curr-btn" data-char="&#x20B9;">₹</button>
-                        <button class="copy-btn curr-btn" data-char="&#x20BD;">₽</button>
-                        <button class="copy-btn curr-btn" data-char="&#x20A9;">₩</button>
-                        <button class="copy-btn curr-btn" data-char="&#x20AA;">₪</button>
-                        <button class="copy-btn curr-btn" data-char="&#x20B1;">₱</button>
-                        <button class="copy-btn curr-btn" data-char="&#xA2;">¢</button>
-                        <button class="copy-btn curr-btn" data-char="&#xA4;">¤</button>
-                        <button class="copy-btn curr-btn" data-char="&#x20BA;">₺</button>
-                        <button class="copy-btn curr-btn" data-char="&#x20BC;">₼</button>
-                        <button class="copy-btn curr-btn" data-char="&#x20BE;">₾</button>
-                        <button class="copy-btn curr-btn" data-char="&#x20A0;">₠</button>
-                        <button class="copy-btn curr-btn" data-char="&#x20B2;">₲</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card-section">
-                <h2 class="section-header">Fractions</h2>
-                <div class="character-card">
-                    <div class="card-header">
+                        <button class="copy-btn bullet-btn" data-char="&#x2022;">•</button>
+                        <button class="copy-btn bullet-btn" data-char="&#x25A0;">■</button>
+                        <button class="copy-btn bullet-btn" data-char="&#x25A1;">□</button>
+                        <button class="copy-btn star-btn" data-char="&#x2605;">★</button>
+                        <button class="copy-btn star-btn" data-char="&#x2606;">☆</button>
+                        <button class="copy-btn star-btn" data-char="&#x2713;">✓</button>
+                        <button class="copy-btn punct-btn" data-char="&#x2026;">…</button>
+                        <button class="copy-btn punct-btn" data-char="&#xB6;">¶</button>
+                        <button class="copy-btn letter-btn" data-char="&#xB0;">°</button>
+                        <button class="copy-btn letter-btn" data-char="&#xA9;">©</button>
+                        <button class="copy-btn letter-btn" data-char="&#xAE;">®</button>
                         <button class="copy-btn frac-btn" data-char="&#xBD;">½</button>
-                        <button class="copy-btn frac-btn" data-char="&#x2153;">⅓</button>
-                        <button class="copy-btn frac-btn" data-char="&#x2154;">⅔</button>
                         <button class="copy-btn frac-btn" data-char="&#xBC;">¼</button>
                         <button class="copy-btn frac-btn" data-char="&#xBE;">¾</button>
-                        <button class="copy-btn frac-btn" data-char="&#x2159;">⅙</button>
-                        <button class="copy-btn frac-btn" data-char="&#x215A;">⅚</button>
-                        <button class="copy-btn frac-btn" data-char="&#x215B;">⅛</button>
-                        <button class="copy-btn frac-btn" data-char="&#x215C;">⅜</button>
-                        <button class="copy-btn frac-btn" data-char="&#x215D;">⅝</button>
-                        <button class="copy-btn frac-btn" data-char="&#x215E;">⅞</button>
-                        <button class="copy-btn frac-btn" data-char="&#x2150;">⅐</button>
-                        <button class="copy-btn frac-btn" data-char="&#x2151;">⅑</button>
-                        <button class="copy-btn frac-btn" data-char="&#x2152;">⅒</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card-section">
-                <h2 class="section-header">Superscript & Subscript</h2>
-                <div class="character-card">
-                    <div class="card-header">
-                        <button class="copy-btn super-btn" data-char="&#xB9;">¹</button>
                         <button class="copy-btn super-btn" data-char="&#xB2;">²</button>
                         <button class="copy-btn super-btn" data-char="&#xB3;">³</button>
-                        <button class="copy-btn super-btn" data-char="&#x2070;">⁰</button>
-                        <button class="copy-btn super-btn" data-char="&#x2074;">⁴</button>
-                        <button class="copy-btn super-btn" data-char="&#x2075;">⁵</button>
-                        <button class="copy-btn super-btn" data-char="&#x2076;">⁶</button>
-                        <button class="copy-btn super-btn" data-char="&#x2077;">⁷</button>
-                        <button class="copy-btn super-btn" data-char="&#x2078;">⁸</button>
-                        <button class="copy-btn super-btn" data-char="&#x2079;">⁹</button>
-                        <button class="copy-btn super-btn" data-char="&#x2080;">₀</button>
-                        <button class="copy-btn super-btn" data-char="&#x2081;">₁</button>
-                        <button class="copy-btn super-btn" data-char="&#x2082;">₂</button>
-                        <button class="copy-btn super-btn" data-char="&#x2083;">₃</button>
-                        <button class="copy-btn super-btn" data-char="&#x2084;">₄</button>
-                        <button class="copy-btn super-btn" data-char="&#x2085;">₅</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card-section">
-                <h2 class="section-header">Symbols</h2>
-                <div class="character-card">
-                    <div class="card-header">
-                        <button class="copy-btn letter-btn" data-char="&#x2103;">℃</button>
-                        <button class="copy-btn letter-btn" data-char="&#x2109;">℉</button>
-                        <button class="copy-btn letter-btn" data-char="&#x2126;">Ω</button>
-                        <button class="copy-btn letter-btn" data-char="&#xB5;">µ</button>
-                        <button class="copy-btn letter-btn" data-char="&#xB0;">°</button>
-                        <button class="copy-btn letter-btn" data-char="&#x2032;">′</button>
-                        <button class="copy-btn letter-btn" data-char="&#x2033;">″</button>
-                        <button class="copy-btn letter-btn" data-char="&#x2034;">‴</button>
-                        <button class="copy-btn letter-btn" data-char="&#x2191;">↑</button>
-                        <button class="copy-btn letter-btn" data-char="&#x2193;">↓</button>
-                        <button class="copy-btn letter-btn" data-char="&#x25CA;">◊</button>
-                        <button class="copy-btn letter-btn" data-char="&#x2318;">⌘</button>
-                        <button class="copy-btn letter-btn" data-char="&#x2325;">⌥</button>
-                        <button class="copy-btn letter-btn" data-char="&#x2387;">⎇</button>
-                        <button class="copy-btn letter-btn" data-char="&#x2370;">⌰</button>
-                        <button class="copy-btn letter-btn" data-char="&#xA9;">©</button>
                     </div>
                 </div>
             </div>
@@ -464,10 +521,15 @@
                         button.textContent = originalText;
                         button.classList.remove('copied');
                     }, 2000);
-                }).catch(err => {
-                    console.error('Failed:', err);
-                });
+                }).catch(err => console.error('Failed:', err));
             });
+        });
+
+        const testInput = document.getElementById('testInput');
+        const testOutput = document.getElementById('testOutput');
+
+        testInput.addEventListener('input', () => {
+            testOutput.textContent = testInput.value;
         });
     </script>
 </body>
