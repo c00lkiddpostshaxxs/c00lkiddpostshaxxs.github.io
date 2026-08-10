@@ -65,6 +65,7 @@
             const [content, setContent] = useState('');
             const [message, setMessage] = useState('');
             const [githubToken, setGithubToken] = useState(() => sessionStorage.getItem('githubToken') || '');
+            const [encryptPassword, setEncryptPassword] = useState('');
             const [githubStatus, setGithubStatus] = useState('');
 
             useEffect(() => {
@@ -77,6 +78,36 @@
                 const hashBuffer = await crypto.subtle.digest('SHA-256', data);
                 const hashArray = Array.from(new Uint8Array(hashBuffer));
                 return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+            };
+
+            const encryptButtons = async (buttonsToEncrypt, pwd) => {
+                const encoder = new TextEncoder();
+                const data = encoder.encode(JSON.stringify(buttonsToEncrypt));
+                
+                const passwordKey = await crypto.subtle.importKey(
+                    'raw',
+                    encoder.encode(pwd),
+                    'PBKDF2',
+                    false,
+                    ['deriveKey']
+                );
+                
+                const key = await crypto.subtle.deriveKey(
+                    { name: 'PBKDF2', salt: encoder.encode('salt123'), iterations: 100000, hash: 'SHA-256' },
+                    passwordKey,
+                    { name: 'AES-GCM', length: 256 },
+                    false,
+                    ['encrypt']
+                );
+                
+                const iv = crypto.getRandomValues(new Uint8Array(12));
+                const encrypted = await crypto.subtle.encrypt('AES-GCM', key, data);
+                
+                const combined = new Uint8Array(iv.length + encrypted.byteLength);
+                combined.set(iv);
+                combined.set(new Uint8Array(encrypted), iv.length);
+                
+                return btoa(String.fromCharCode(...combined));
             };
 
             const handleLogin = async (e) => {
@@ -122,14 +153,21 @@
                     showMessage('GitHub token required', 'error');
                     return;
                 }
+                
+                if (!encryptPassword.trim()) {
+                    showMessage('Enter password to encrypt buttons', 'error');
+                    return;
+                }
 
-                setGithubStatus('Committing...');
+                setGithubStatus('Encrypting & committing...');
 
                 try {
                     const owner = 'c00lkiddpostshaxxs';
                     const repo = 'c00lkiddpostshaxxs.github.io';
                     const filePath = 'buttons.json';
-                    const content = JSON.stringify(buttons, null, 2);
+                    
+                    const encrypted = await encryptButtons(buttons, encryptPassword);
+                    const content = JSON.stringify({ encrypted: true, data: encrypted });
 
                     let sha = null;
                     try {
@@ -165,8 +203,8 @@
                     );
 
                     if (response.ok) {
-                        showMessage('✓ Committed to GitHub!', 'success');
-                        setGithubStatus('✓ Last committed: just now');
+                        showMessage('✓ Encrypted & committed to GitHub!', 'success');
+                        setGithubStatus('✓ Last committed: just now (encrypted)');
                     } else {
                         const err = await response.json();
                         setGithubStatus('✗ Error: ' + (err.message || 'Unknown error'));
@@ -247,9 +285,9 @@
                     </div>
 
                     <div className="section">
-                        <h2>🚀 GitHub Commit</h2>
+                        <h2>🚀 GitHub Commit (Encrypted)</h2>
                         <div className="warning">
-                            ⚠️ Token is stored in sessionStorage (cleared when you close browser). Each session, paste your PAT here to commit.
+                            🔒 Buttons are encrypted before committing! buttons.json is unreadable without your encryption password.
                         </div>
                         <div className="form-group">
                             <label>GitHub Personal Access Token</label>
@@ -263,7 +301,16 @@
                                 }}
                             />
                         </div>
-                        <button className="btn-primary" onClick={handleCommitToGithub} style={{ width: '100%' }}>Commit buttons.json to GitHub</button>
+                        <div className="form-group">
+                            <label>Encryption Password</label>
+                            <input
+                                type="password"
+                                placeholder="Password to encrypt buttons"
+                                value={encryptPassword}
+                                onChange={(e) => setEncryptPassword(e.target.value)}
+                            />
+                        </div>
+                        <button className="btn-primary" onClick={handleCommitToGithub} style={{ width: '100%' }}>Encrypt & Commit to GitHub</button>
                         {githubStatus && <div className="git-status">{githubStatus}</div>}
                     </div>
                 </div>
