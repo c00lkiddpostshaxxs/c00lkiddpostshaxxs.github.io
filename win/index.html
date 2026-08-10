@@ -143,8 +143,12 @@
                 showMessage('Button deleted', 'success');
             };
 
-            const handleCopy = (text) => {
+            const [copiedId, setCopiedId] = useState(null);
+
+            const handleCopy = (text, id) => {
                 navigator.clipboard.writeText(text);
+                setCopiedId(id);
+                setTimeout(() => setCopiedId(null), 2000);
                 showMessage('Copied to clipboard!', 'success');
             };
 
@@ -281,7 +285,9 @@
                                 {buttons.map(btn => (
                                     <div key={btn.id} className="button-card">
                                         <div className="label">{btn.label}</div>
-                                        <button onClick={() => handleCopy(btn.content)}>Copy</button>
+                                        <button onClick={() => handleCopy(btn.content, btn.id)}>
+                                            {copiedId === btn.id ? '✓ Copied!' : 'Copy'}
+                                        </button>
                                         <button className="delete btn-danger" onClick={() => handleDeleteButton(btn.id)}>Delete</button>
                                     </div>
                                 ))}
