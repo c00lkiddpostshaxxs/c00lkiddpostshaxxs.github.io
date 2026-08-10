@@ -1,0 +1,25 @@
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <!-- Clipboard clip (metal) -->
+  <path d="M 18 8 L 22 8 Q 24 8 24 10 L 24 14 Q 24 16 22 16 L 18 16 Q 16 16 16 14 L 16 10 Q 16 8 18 8" fill="#64748b" stroke="#475569" stroke-width="1"/>
+  
+  <!-- Clipboard body -->
+  <rect x="12" y="16" width="40" height="40" rx="2" ry="2" fill="#1e293b" stroke="#3b82f6" stroke-width="2"/>
+  
+  <!-- Clipboard top border (accent) -->
+  <path d="M 12 22 L 52 22" stroke="#60a5fa" stroke-width="2"/>
+  
+  <!-- Content lines (checklist style) -->
+  <g stroke="#60a5fa" stroke-width="1.5">
+    <!-- Line 1 -->
+    <circle cx="18" cy="30" r="1.5" fill="none"/>
+    <path d="M 22 30 L 36 30" fill="none"/>
+    
+    <!-- Line 2 -->
+    <circle cx="18" cy="38" r="1.5" fill="none"/>
+    <path d="M 22 38 L 46 38" fill="none"/>
+    
+    <!-- Line 3 -->
+    <circle cx="18" cy="46" r="1.5" fill="none"/>
+    <path d="M 22 46 L 42 46" fill="none"/>
+  </g>
+</svg>
