@@ -15,10 +15,8 @@
         .login-box h1 { font-size: 24px; margin-bottom: 24px; text-align: center; }
         .login-box input { width: 100%; padding: 12px; margin-bottom: 16px; background: #0f172a; border: 1px solid #334155; border-radius: 6px; color: #e2e8f0; font-size: 16px; }
         .login-box input::placeholder { color: #64748b; }
-        .login-box button { width: 100%; padding: 12px; background: #3b82f6; border: none; border-radius: 6px; color: white; font-weight: 600; cursor: pointer; font-size: 16px; margin-bottom: 12px; }
+        .login-box button { width: 100%; padding: 12px; background: #3b82f6; border: none; border-radius: 6px; color: white; font-weight: 600; cursor: pointer; font-size: 16px; }
         .login-box button:hover { background: #2563eb; }
-        .login-box .github-btn { background: #1f2937; border: 1px solid #374151; }
-        .login-box .github-btn:hover { background: #374151; }
         .admin-container { max-width: 1200px; margin: 0 auto; padding: 24px; }
         .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; border-bottom: 1px solid #334155; padding-bottom: 16px; }
         .admin-header h1 { font-size: 28px; }
@@ -36,18 +34,17 @@
         .btn-danger { padding: 8px 12px; background: #ef4444; border: none; border-radius: 4px; color: white; cursor: pointer; font-size: 12px; }
         .btn-danger:hover { background: #dc2626; }
         .buttons-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; margin-top: 16px; }
-        .button-card { background: #0f172a; border: 1px solid #334155; border-radius: 6px; padding: 12px; text-align: center; position: relative; }
-        .button-card button { width: 100%; padding: 10px; background: #10b981; border: none; border-radius: 4px; color: white; cursor: pointer; font-weight: 600; font-size: 14px; margin-bottom: 8px; word-break: break-word; }
+        .button-card { background: #0f172a; border: 1px solid #334155; border-radius: 6px; padding: 12px; text-align: center; }
+        .button-card button { width: 100%; padding: 10px; background: #10b981; border: none; border-radius: 4px; color: white; cursor: pointer; font-weight: 600; font-size: 14px; margin-bottom: 8px; }
         .button-card button:hover { background: #059669; }
-        .button-card .delete { width: 100%; padding: 6px; background: #ef4444; font-size: 12px; }
+        .button-card .delete { background: #ef4444; }
         .button-card .delete:hover { background: #dc2626; }
         .button-card .label { font-size: 12px; color: #94a3b8; word-break: break-word; margin-bottom: 8px; }
         .message { padding: 12px; border-radius: 6px; margin-bottom: 16px; font-weight: 600; }
         .message.success { background: #10b98140; border: 1px solid #10b981; color: #86efac; }
         .message.error { background: #ef444440; border: 1px solid #ef4444; color: #fca5a5; }
-        .git-status { font-size: 12px; color: #94a3b8; margin-top: 12px; }
-        .auth-status { padding: 12px; background: #0f172a; border: 1px solid #334155; border-radius: 6px; font-size: 12px; color: #cbd5e1; margin-bottom: 16px; }
         .warning { padding: 12px; background: #0f172a; border: 1px solid #d97706; border-radius: 6px; margin-bottom: 16px; font-size: 12px; color: #fca5a5; }
+        .git-status { font-size: 12px; color: #94a3b8; margin-top: 12px; }
     </style>
 </head>
 <body>
@@ -55,16 +52,11 @@
     <script type="text/babel">
         const { useState, useEffect } = React;
 
-        // PASSWORD HASH (SHA-256)
-        // Generate your own at https://www.sha256.org/
-        // Change this to your password's hash!
         const PASSWORD_HASH = 'a402fbbf2d99cd4868f96b06dd047f402eee30e03d1b2a10650476e6723dc69b';
 
         function App() {
             const [isLoggedIn, setIsLoggedIn] = useState(false);
             const [password, setPassword] = useState('');
-            const [sessionId, setSessionId] = useState(null);
-            const [githubAuthed, setGithubAuthed] = useState(false);
             const [buttons, setButtons] = useState(() => {
                 const stored = localStorage.getItem('clipboardButtons');
                 return stored ? JSON.parse(stored) : [];
@@ -72,24 +64,12 @@
             const [label, setLabel] = useState('');
             const [content, setContent] = useState('');
             const [message, setMessage] = useState('');
+            const [githubToken, setGithubToken] = useState(() => sessionStorage.getItem('githubToken') || '');
             const [githubStatus, setGithubStatus] = useState('');
 
             useEffect(() => {
                 localStorage.setItem('clipboardButtons', JSON.stringify(buttons));
             }, [buttons]);
-
-            useEffect(() => {
-                // Check if we're coming back from GitHub OAuth
-                const params = new URLSearchParams(window.location.search);
-                const session = params.get('session');
-                if (session) {
-                    setSessionId(session);
-                    setGithubAuthed(true);
-                    // Clean up URL
-                    window.history.replaceState({}, document.title, window.location.pathname);
-                    showMessage('✓ GitHub authorized!', 'success');
-                }
-            }, []);
 
             const hashPassword = async (pwd) => {
                 const encoder = new TextEncoder();
@@ -137,35 +117,62 @@
                 setTimeout(() => setMessage(''), 3000);
             };
 
-            const handleGitHubLogin = () => {
-                window.location.href = 'https://c00lkiddpostshaxxs.vercel.app/api/auth';
-            };
-
             const handleCommitToGithub = async () => {
-                if (!sessionId) {
-                    showMessage('Not authenticated with GitHub', 'error');
+                if (!githubToken.trim()) {
+                    showMessage('GitHub token required', 'error');
                     return;
                 }
 
                 setGithubStatus('Committing...');
 
                 try {
-                    const response = await fetch('https://c00lkiddpostshaxxs.vercel.app/api/commit', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ sessionId, buttons })
-                    });
+                    const owner = 'c00lkiddpostshaxxs';
+                    const repo = 'c00lkiddpostshaxxs.github.io';
+                    const filePath = 'buttons.json';
+                    const content = JSON.stringify(buttons, null, 2);
 
-                    const data = await response.json();
+                    let sha = null;
+                    try {
+                        const fileResponse = await fetch(
+                            `https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`,
+                            { headers: { Authorization: `token ${githubToken}` } }
+                        );
+                        if (fileResponse.ok) {
+                            const fileData = await fileResponse.json();
+                            sha = fileData.sha;
+                        }
+                    } catch (e) {
+                        // File doesn't exist
+                    }
+
+                    const payload = {
+                        message: 'Update clipboard buttons - ' + new Date().toLocaleString(),
+                        content: btoa(content)
+                    };
+
+                    if (sha) payload.sha = sha;
+
+                    const response = await fetch(
+                        `https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`,
+                        {
+                            method: 'PUT',
+                            headers: {
+                                Authorization: `token ${githubToken}`,
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(payload)
+                        }
+                    );
 
                     if (response.ok) {
                         showMessage('✓ Committed to GitHub!', 'success');
                         setGithubStatus('✓ Last committed: just now');
                     } else {
-                        setGithubStatus(`✗ Error: ${data.error}`);
+                        const err = await response.json();
+                        setGithubStatus('✗ Error: ' + (err.message || 'Unknown error'));
                     }
                 } catch (error) {
-                    setGithubStatus(`✗ Error: ${error.message}`);
+                    setGithubStatus('✗ Error: ' + error.message);
                 }
             };
 
@@ -242,24 +249,22 @@
                     <div className="section">
                         <h2>🚀 GitHub Commit</h2>
                         <div className="warning">
-                            ⚠️ <strong>Security:</strong> GitHub OAuth token is secure. Client Secret stays on backend. You can revoke access anytime in GitHub settings.
+                            ⚠️ Token is stored in sessionStorage (cleared when you close browser). Each session, paste your PAT here to commit.
                         </div>
-                        {!githubAuthed ? (
-                            <div>
-                                <p style={{ color: '#cbd5e1', marginBottom: '16px', fontSize: '14px' }}>
-                                    Click to authorize with GitHub. Your buttons will commit as <code>buttons.json</code> to the repo.
-                                </p>
-                                <button className="btn-primary github-btn" onClick={handleGitHubLogin} style={{ background: '#1f2937', border: '1px solid #374151', width: '100%' }}>
-                                    🔗 Login with GitHub
-                                </button>
-                            </div>
-                        ) : (
-                            <div>
-                                <div className="auth-status">✓ Authorized with GitHub (session-based, auto-expires)</div>
-                                <button className="btn-primary" onClick={handleCommitToGithub} style={{ width: '100%' }}>Commit buttons.json to GitHub</button>
-                                {githubStatus && <div className="git-status">{githubStatus}</div>}
-                            </div>
-                        )}
+                        <div className="form-group">
+                            <label>GitHub Personal Access Token</label>
+                            <input
+                                type="password"
+                                placeholder="ghp_xxxxxxxxxxxxxxxxxxxx"
+                                value={githubToken}
+                                onChange={(e) => {
+                                    setGithubToken(e.target.value);
+                                    sessionStorage.setItem('githubToken', e.target.value);
+                                }}
+                            />
+                        </div>
+                        <button className="btn-primary" onClick={handleCommitToGithub} style={{ width: '100%' }}>Commit buttons.json to GitHub</button>
+                        {githubStatus && <div className="git-status">{githubStatus}</div>}
                     </div>
                 </div>
             );
