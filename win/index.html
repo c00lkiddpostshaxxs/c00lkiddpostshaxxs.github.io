@@ -147,7 +147,7 @@
 
                     const payload = {
                         message: 'Update clipboard buttons - ' + new Date().toLocaleString(),
-                        content: btoa(content)
+                        content: btoa(unescape(encodeURIComponent(content)))
                     };
 
                     if (sha) payload.sha = sha;
