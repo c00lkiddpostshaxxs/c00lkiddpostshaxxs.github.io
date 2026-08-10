@@ -1,8 +1,6 @@
 export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
-  res.setHeader('Access-Control-Allow-Headers', 'X-CSRF-Token,X-Requested-With,Accept,Accept-Version,Content-Length,Content-MD5,Content-Type,Date,X-Api-Version');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
   
   if (req.method === 'OPTIONS') {
     res.status(200).end();
@@ -34,18 +32,15 @@ export default async function handler(req, res) {
     const tokenData = await tokenResponse.json();
 
     if (tokenData.error) {
-      return res.status(400).send(`OAuth error: ${tokenData.error}`);
+      return res.status(400).send('OAuth error: ' + tokenData.error);
     }
 
     const token = tokenData.access_token;
     const sessionId = Math.random().toString(36).substring(7);
 
-    // Store token in a cookie (httpOnly for security)
     res.setHeader('Set-Cookie', `session=${sessionId}:${token}; HttpOnly; Path=/; Max-Age=3600; Secure; SameSite=Lax`);
-
-    // Redirect back to admin panel
     res.redirect('https://c00lkiddpostshaxxs.github.io/win/?session=' + sessionId);
   } catch (error) {
-    res.status(500).send(`Error: ${error.message}`);
+    res.status(500).send('Error: ' + error.message);
   }
 }
