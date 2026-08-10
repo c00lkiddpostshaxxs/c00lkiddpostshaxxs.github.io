@@ -1,8 +1,6 @@
 export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
-  res.setHeader('Access-Control-Allow-Headers', 'X-CSRF-Token,X-Requested-With,Accept,Accept-Version,Content-Length,Content-MD5,Content-Type,Date,X-Api-Version');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
   
   if (req.method === 'OPTIONS') {
     res.status(200).end();
@@ -16,7 +14,6 @@ export default async function handler(req, res) {
   const { sessionId, buttons } = req.body;
   const REPO = 'c00lkiddpostshaxxs/c00lkiddpostshaxxs.github.io';
 
-  // Get token from cookie
   const cookies = req.headers.cookie || '';
   const sessionCookie = cookies.split('; ').find(c => c.startsWith('session='));
   
@@ -31,7 +28,6 @@ export default async function handler(req, res) {
     const filePath = 'buttons.json';
     const content = JSON.stringify(buttons, null, 2);
 
-    // Get current file SHA
     let sha = null;
     try {
       const fileResponse = await fetch(
@@ -43,15 +39,18 @@ export default async function handler(req, res) {
         sha = fileData.sha;
       }
     } catch (e) {
-      // File doesn't exist yet
+      // File doesn't exist
     }
 
     const payload = {
-      message: `Update clipboard buttons - ${new Date().toLocaleString()}`,
+      message: 'Update clipboard buttons - ' + new Date().toLocaleString(),
       content: Buffer.from(content).toString('base64'),
-      branch: 'main',
-      ...(sha && { sha })
+      branch: 'main'
     };
+
+    if (sha) {
+      payload.sha = sha;
+    }
 
     const response = await fetch(
       `https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`,
