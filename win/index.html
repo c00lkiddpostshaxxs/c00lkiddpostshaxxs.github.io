@@ -101,7 +101,11 @@
                 );
                 
                 const iv = crypto.getRandomValues(new Uint8Array(12));
-                const encrypted = await crypto.subtle.encrypt('AES-GCM', key, data);
+                const encrypted = await crypto.subtle.encrypt(
+                    { name: 'AES-GCM', iv: iv },
+                    key,
+                    data
+                );
                 
                 const combined = new Uint8Array(iv.length + encrypted.byteLength);
                 combined.set(iv);
