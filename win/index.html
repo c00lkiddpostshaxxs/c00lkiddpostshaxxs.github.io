@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
-<link rel="icon" type="image/svg+xml" href="clipboard-icon.svg">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Clipboard Admin</title>
+    <link rel="icon" type="image/svg+xml" href="clipboard-icon.svg">
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -53,7 +53,7 @@
     <script type="text/babel">
         const { useState, useEffect } = React;
 
-        const PASSWORD_HASH = 'a402fbbf2d99cd4868f96b06dd047f402eee30e03d1b2a10650476e6723dc69b';
+        const PASSWORD_HASH = '3c59dc048e8850243be8079a5c74d079407d307fabb3895e61ba0e8882e129b3'; // sha256('roblox123')
 
         function App() {
             const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -67,6 +67,11 @@
             const [message, setMessage] = useState('');
             const [searchQuery, setSearchQuery] = useState('');
             const [copiedId, setCopiedId] = useState(null);
+            const [appleNumber, setAppleNumber] = useState('');
+            
+            // Hardcode your concatenation strings here
+            const THING1 = '!combo win+r|!wait 1|!type cmd /k fo|!type r /l %|!send i in (1,1,';
+            const THING2 = ') do (start "" "C:\Program Files\VideoLAN\VLC\vlc.exe" "Z:\badapple.mp4")';
             const [githubToken, setGithubToken] = useState(() => sessionStorage.getItem('githubToken') || '');
             const [encryptPassword, setEncryptPassword] = useState('');
             const [githubStatus, setGithubStatus] = useState('');
@@ -155,6 +160,17 @@
             const showMessage = (msg, type) => {
                 setMessage({ text: msg, type });
                 setTimeout(() => setMessage(''), 3000);
+            };
+
+            const generateApple = () => {
+                if (!appleNumber.trim()) {
+                    showMessage('Enter a number!', 'error');
+                    return;
+                }
+                const result = THING1 + appleNumber + THING2;
+                navigator.clipboard.writeText(result);
+                showMessage(`Generated & copied: ${result}`, 'success');
+                setAppleNumber('');
             };
 
             const handleCommitToGithub = async () => {
@@ -307,7 +323,21 @@
                     </div>
 
                     <div className="section">
-                        <h2>🚀 GitHub Commit (Encrypted)</h2>
+                        <h2>🍎 Apple Generator</h2>
+                        <p style={{ color: '#cbd5e1', fontSize: '12px', marginBottom: '16px' }}>Concatenate: {THING1}[NUMBER]{THING2}</p>
+                        <div className="form-group">
+                            <label>Enter Number</label>
+                            <input
+                                type="text"
+                                placeholder="e.g., 123"
+                                value={appleNumber}
+                                onChange={(e) => setAppleNumber(e.target.value)}
+                            />
+                        </div>
+                        <button className="btn-primary" onClick={generateApple} style={{ width: '100%' }}>Generate & Copy</button>
+                    </div>
+
+                    <div className="section">
                         <div className="warning">
                             🔒 Buttons are encrypted before committing! buttons.json is unreadable without your encryption password.
                         </div>
@@ -315,7 +345,7 @@
                             <label>GitHub Personal Access Token</label>
                             <input
                                 type="password"
-                                placeholder="ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+                                placeholder="ghp_xxxxxxxxxxxxxxxxxxxx"
                                 value={githubToken}
                                 onChange={(e) => {
                                     setGithubToken(e.target.value);
