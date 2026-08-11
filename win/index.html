@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-<link rel="icon" type="image/svg+xml" href="clipboard-icon.svg">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -65,6 +64,8 @@
             const [label, setLabel] = useState('');
             const [content, setContent] = useState('');
             const [message, setMessage] = useState('');
+            const [searchQuery, setSearchQuery] = useState('');
+            const [copiedId, setCopiedId] = useState(null);
             const [githubToken, setGithubToken] = useState(() => sessionStorage.getItem('githubToken') || '');
             const [encryptPassword, setEncryptPassword] = useState('');
             const [githubStatus, setGithubStatus] = useState('');
@@ -142,8 +143,6 @@
                 setButtons(buttons.filter(btn => btn.id !== id));
                 showMessage('Button deleted', 'success');
             };
-
-            const [copiedId, setCopiedId] = useState(null);
 
             const handleCopy = (text, id) => {
                 navigator.clipboard.writeText(text);
@@ -278,11 +277,22 @@
 
                     <div className="section">
                         <h2>🎯 Your Buttons ({buttons.length})</h2>
+                        <div className="form-group">
+                            <input
+                                type="text"
+                                placeholder="Search buttons..."
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                style={{ marginBottom: '16px' }}
+                            />
+                        </div>
                         {buttons.length === 0 ? (
                             <p style={{ color: '#94a3b8' }}>No buttons yet. Add one above!</p>
                         ) : (
                             <div className="buttons-grid">
-                                {buttons.map(btn => (
+                                {buttons
+                                    .filter(btn => btn.label.toLowerCase().includes(searchQuery.toLowerCase()))
+                                    .map(btn => (
                                     <div key={btn.id} className="button-card">
                                         <div className="label">{btn.label}</div>
                                         <button onClick={() => handleCopy(btn.content, btn.id)}>
@@ -304,7 +314,7 @@
                             <label>GitHub Personal Access Token</label>
                             <input
                                 type="password"
-                                placeholder="ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+                                placeholder="ghp_xxxxxxxxxxxxxxxxxxxx"
                                 value={githubToken}
                                 onChange={(e) => {
                                     setGithubToken(e.target.value);
