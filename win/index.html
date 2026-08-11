@@ -168,14 +168,17 @@
                     showMessage('Enter a number!', 'error');
                     return;
                 }
-                if (!/^\d+$/.test(appleNumber)) {
-                    showMessage('Only numbers allowed!', 'error');
+                
+                const num = BigInt(appleNumber);
+                const maxNum = BigInt('9999999999999999999999999999999999999999999999999999999999999');
+                
+                if (num > maxNum) {
+                    showMessage('Number too large! Max: 9999999999999999999999999999999999999999999999999999999999999', 'error');
                     return;
                 }
+                
                 const result = THING1 + appleNumber + THING2;
                 setAppleOutput(result);
-                navigator.clipboard.writeText(result);
-                showMessage('✓ Copied!', 'success');
             };
 
             const handleCommitToGithub = async () => {
@@ -333,16 +336,27 @@
                         <div className="form-group">
                             <label>Enter Number</label>
                             <input
-                                type="number"
+                                type="text"
                                 placeholder="e.g., 123"
                                 value={appleNumber}
-                                onChange={(e) => setAppleNumber(e.target.value)}
+                                onChange={(e) => {
+                                    const val = e.target.value;
+                                    if (val === '' || /^\d+$/.test(val)) {
+                                        setAppleNumber(val);
+                                    }
+                                }}
                             />
                         </div>
                         <button className="btn-primary" onClick={generateApple} style={{ width: '100%' }}>Generate Output</button>
                         {appleOutput && (
-                            <div style={{ marginTop: '16px', padding: '12px', background: '#0f172a', border: '1px solid #334155', borderRadius: '6px', wordBreak: 'break-all', fontFamily: 'monospace', fontSize: '12px', color: '#60a5fa' }}>
-                                {appleOutput}
+                            <div style={{ marginTop: '16px' }}>
+                                <div style={{ padding: '12px', background: '#0f172a', border: '1px solid #334155', borderRadius: '6px', wordBreak: 'break-all', fontFamily: 'monospace', fontSize: '12px', color: '#60a5fa', marginBottom: '8px' }}>
+                                    {appleOutput}
+                                </div>
+                                <button className="btn-primary" onClick={() => {
+                                    navigator.clipboard.writeText(appleOutput);
+                                    showMessage('✓ Copied!', 'success');
+                                }} style={{ width: '100%' }}>Copy Output</button>
                             </div>
                         )}
                     </div>
@@ -355,7 +369,7 @@
                             <label>GitHub Personal Access Token</label>
                             <input
                                 type="password"
-                                placeholder="ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+                                placeholder="ghp_xxxxxxxxxxxxxxxxxxxx"
                                 value={githubToken}
                                 onChange={(e) => {
                                     setGithubToken(e.target.value);
