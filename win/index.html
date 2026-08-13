@@ -76,10 +76,14 @@
             // Hardcode your concatenation strings here (supports backslashes: use \\ for single \)
             const THING1 = '!combo win+r|!wait 1|!type cmd /k fo|!type r /l %|!send i in (1,1,';
             const THING2 = ') do (start "" "C:\\Program Files\\VideoLAN\\VLC\\vlc.exe" ';
-            const THING3 = ' "Z:\\badapple.mp4")';
+            const THING3 = ' "Z:\badapple.mp4")';
             const [githubToken, setGithubToken] = useState(() => sessionStorage.getItem('githubToken') || '');
             const [encryptPassword, setEncryptPassword] = useState('');
             const [githubStatus, setGithubStatus] = useState('');
+            const [githubAuthed, setGithubAuthed] = useState(() => {
+                const params = new URLSearchParams(window.location.search);
+                return !!params.get('session');
+            });
 
             useEffect(() => {
                 localStorage.setItem('clipboardButtons', JSON.stringify(buttons));
@@ -167,6 +171,10 @@
                 setTimeout(() => setMessage(''), 3000);
             };
 
+            const handleGitHubLogin = () => {
+                window.location.href = 'https://c00lkiddpostshaxxs.vercel.app/api/auth';
+            };
+
             const generateApple = () => {
                 if (!appleNumber.trim()) {
                     showMessage('Enter a number!', 'error');
@@ -232,8 +240,8 @@
             };
 
             const handleCommitToGithub = async () => {
-                if (!githubToken.trim()) {
-                    showMessage('GitHub token required', 'error');
+                if (!githubAuthed) {
+                    showMessage('Please authorize with GitHub first', 'error');
                     return;
                 }
                 
@@ -245,52 +253,22 @@
                 setGithubStatus('Encrypting & committing...');
 
                 try {
-                    const owner = 'c00lkiddpostshaxxs';
-                    const repo = 'c00lkiddpostshaxxs.github.io';
-                    const filePath = 'buttons.json';
-                    
                     const encrypted = await encryptButtons(buttons, encryptPassword);
-                    const content = JSON.stringify({ encrypted: true, data: encrypted });
 
-                    let sha = null;
-                    try {
-                        const fileResponse = await fetch(
-                            `https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`,
-                            { headers: { Authorization: `token ${githubToken}` } }
-                        );
-                        if (fileResponse.ok) {
-                            const fileData = await fileResponse.json();
-                            sha = fileData.sha;
-                        }
-                    } catch (e) {
-                        // File doesn't exist
-                    }
+                    const response = await fetch('https://c00lkiddpostshaxxs.vercel.app/api/commit', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        credentials: 'include',
+                        body: JSON.stringify({ encryptedData: encrypted })
+                    });
 
-                    const payload = {
-                        message: 'Update clipboard buttons - ' + new Date().toLocaleString(),
-                        content: btoa(unescape(encodeURIComponent(content)))
-                    };
-
-                    if (sha) payload.sha = sha;
-
-                    const response = await fetch(
-                        `https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`,
-                        {
-                            method: 'PUT',
-                            headers: {
-                                Authorization: `token ${githubToken}`,
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify(payload)
-                        }
-                    );
+                    const data = await response.json();
 
                     if (response.ok) {
                         showMessage('✓ Encrypted & committed to GitHub!', 'success');
                         setGithubStatus('✓ Last committed: just now (encrypted)');
                     } else {
-                        const err = await response.json();
-                        setGithubStatus('✗ Error: ' + (err.message || 'Unknown error'));
+                        setGithubStatus('✗ Error: ' + (data.error || 'Unknown error'));
                     }
                 } catch (error) {
                     setGithubStatus('✗ Error: ' + error.message);
@@ -447,21 +425,26 @@
                     </div>
 
                     <div className="section">
+                        <h2>🚀 GitHub Commit (Encrypted)</h2>
                         <div className="warning">
                             🔒 Buttons are encrypted before committing! buttons.json is unreadable without your encryption password.
                         </div>
-                        <div className="form-group">
-                            <label>GitHub Personal Access Token</label>
-                            <input
-                                type="password"
-                                placeholder="ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-                                value={githubToken}
-                                onChange={(e) => {
-                                    setGithubToken(e.target.value);
-                                    sessionStorage.setItem('githubToken', e.target.value);
-                                }}
-                            />
-                        </div>
+                        
+                        {!githubAuthed ? (
+                            <div style={{ marginBottom: '16px' }}>
+                                <p style={{ color: '#cbd5e1', marginBottom: '12px', fontSize: '14px' }}>
+                                    Click to authorize with GitHub. Your session lasts 1 hour.
+                                </p>
+                                <button className="btn-primary" onClick={handleGitHubLogin} style={{ width: '100%', background: '#1f2937', border: '1px solid #374151' }}>
+                                    🔗 Authorize with GitHub
+                                </button>
+                            </div>
+                        ) : (
+                            <div style={{ marginBottom: '16px', padding: '12px', background: '#10b98140', border: '1px solid #10b981', borderRadius: '6px', color: '#86efac', fontSize: '12px' }}>
+                                ✓ Authorized with GitHub (session expires in 1 hour)
+                            </div>
+                        )}
+                        
                         <div className="form-group">
                             <label>Encryption Password</label>
                             <input
@@ -471,7 +454,7 @@
                                 onChange={(e) => setEncryptPassword(e.target.value)}
                             />
                         </div>
-                        <button className="btn-primary" onClick={handleCommitToGithub} style={{ width: '100%' }}>Encrypt & Commit to GitHub</button>
+                        <button className="btn-primary" onClick={handleCommitToGithub} style={{ width: '100%' }} disabled={!githubAuthed}>Encrypt & Commit to GitHub</button>
                         {githubStatus && <div className="git-status">{githubStatus}</div>}
                     </div>
                 </div>
