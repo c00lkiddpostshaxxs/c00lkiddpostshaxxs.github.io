@@ -12,14 +12,19 @@ export default async function handler(req, res) {
     return res.status(405).send('Method not allowed');
   }
 
-  const { encryptedData, sessionId } = req.body;
+  const { encryptedData } = req.body;
+  const { session } = req.query;
   const REPO = 'c00lkiddpostshaxxs/c00lkiddpostshaxxs.github.io';
 
+  if (!session) {
+    return res.status(401).json({ error: 'No session provided' });
+  }
+
   const cookies = req.headers.cookie || '';
-  const sessionCookie = cookies.split('; ').find(c => c.startsWith('session='));
+  const sessionCookie = cookies.split('; ').find(c => c.startsWith('session=' + session));
   
   if (!sessionCookie) {
-    return res.status(401).json({ error: 'Not authenticated' });
+    return res.status(401).json({ error: 'Invalid or expired session' });
   }
 
   const token = sessionCookie.split('=')[1].split(':')[1];
