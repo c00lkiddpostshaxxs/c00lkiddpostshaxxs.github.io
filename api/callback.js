@@ -6,7 +6,7 @@ export default async function handler(req, res) {
   const SUPABASE_KEY = process.env.SUPABASE_KEY;
 
   if (!code) {
-    return res.status(400).send('No authorization code');
+    return res.status(400).send('No code');
   }
 
   try {
@@ -26,29 +26,37 @@ export default async function handler(req, res) {
     const tokenData = await tokenResponse.json();
 
     if (tokenData.error) {
-      return res.status(400).send('OAuth error: ' + tokenData.error);
+      return res.status(400).send('OAuth error');
     }
 
     const token = tokenData.access_token;
     const sessionId = Math.random().toString(36).substring(7);
     
-    // Store session in Supabase
-    const insertResponse = await fetch(SUPABASE_URL + '/rest/v1/sessions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'apikey': SUPABASE_KEY,
-        'Authorization': 'Bearer ' + SUPABASE_KEY
-      },
-      body: JSON.stringify({ id: sessionId, token: token })
-    });
+    // Store in Supabase
+    try {
+      const insertUrl = SUPABASE_URL + '/rest/v1/sessions';
+      const insertResponse = await fetch(insertUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': SUPABASE_KEY,
+          'Authorization': 'Bearer ' + SUPABASE_KEY
+        },
+        body: JSON.stringify({ id: sessionId, token: token })
+      });
 
-    if (!insertResponse.ok) {
-      return res.status(500).send('Failed to store session');
+      if (!insertResponse.ok) {
+        const error = await insertResponse.text();
+        console.error('Supabase error:', error);
+        return res.status(500).send('DB error');
+      }
+    } catch (e) {
+      console.error('Insert failed:', e.message);
+      return res.status(500).send('Insert error: ' + e.message);
     }
 
     res.redirect('https://c00lkiddpostshaxxs.github.io/win/?session=' + sessionId);
   } catch (error) {
-    res.status(500).send('Error: ' + error.message);
+    return res.status(500).send('Error: ' + error.message);
   }
 }
