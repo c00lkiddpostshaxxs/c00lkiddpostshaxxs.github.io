@@ -15,21 +15,39 @@ export default async function handler(req, res) {
   const { encryptedData } = req.body;
   const { session } = req.query;
   const REPO = 'c00lkiddpostshaxxs/c00lkiddpostshaxxs.github.io';
+  const SUPABASE_URL = process.env.SUPABASE_URL;
+  const SUPABASE_KEY = process.env.SUPABASE_KEY;
 
   if (!session) {
     return res.status(401).json({ error: 'No session provided' });
   }
 
-  const cookies = req.headers.cookie || '';
-  const sessionCookie = cookies.split('; ').find(c => c.startsWith('session=' + session));
-  
-  if (!sessionCookie) {
-    return res.status(401).json({ error: 'Invalid or expired session' });
-  }
-
-  const token = sessionCookie.split('=')[1].split(':')[1];
-
   try {
+    // Fetch session from Supabase
+    const getResponse = await fetch(SUPABASE_URL + '/rest/v1/sessions?id=eq.' + session, {
+      headers: {
+        'apikey': SUPABASE_KEY,
+        'Authorization': 'Bearer ' + SUPABASE_KEY
+      }
+    });
+
+    const sessions = await getResponse.json();
+
+    if (!sessions || sessions.length === 0) {
+      return res.status(401).json({ error: 'Session expired or invalid. Please authorize again.' });
+    }
+
+    const token = sessions[0].token;
+
+    // Delete session after use (expires immediately)
+    await fetch(SUPABASE_URL + '/rest/v1/sessions?id=eq.' + session, {
+      method: 'DELETE',
+      headers: {
+        'apikey': SUPABASE_KEY,
+        'Authorization': 'Bearer ' + SUPABASE_KEY
+      }
+    });
+
     const [owner, repo] = REPO.split('/');
     const filePath = 'buttons.json';
     const content = JSON.stringify({ encrypted: true, data: encryptedData });
