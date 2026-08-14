@@ -75,8 +75,8 @@
             
             // Hardcode your concatenation strings here (supports backslashes: use \\ for single \)
             const THING1 = '!combo win+r|!wait 1|!type cmd /k fo|!type r /l %|!send i in (1,1,';
-            const THING2 = ') do (start "" "C:\Program Files\VideoLAN\VLC\vlc.exe" ';
-            const THING3 = ' "Z:\badapple.mp4")';
+            const THING2 = ') do (start "" "C:\\Program Files\\VideoLAN\\VLC\\vlc.exe" ';
+            const THING3 = ' "Z:\\badapple.mp4")';
             const [githubToken, setGithubToken] = useState(() => sessionStorage.getItem('githubToken') || '');
             const [encryptPassword, setEncryptPassword] = useState('');
             const [githubStatus, setGithubStatus] = useState('');
