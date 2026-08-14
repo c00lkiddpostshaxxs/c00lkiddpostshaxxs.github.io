@@ -135,6 +135,39 @@
                 return btoa(String.fromCharCode(...combined));
             };
 
+            const decryptButtons = async (encryptedData, pwd) => {
+                const encoder = new TextEncoder();
+                
+                const combined = new Uint8Array(atob(encryptedData).split('').map(c => c.charCodeAt(0)));
+                const iv = combined.slice(0, 12);
+                const encrypted = combined.slice(12);
+                
+                const passwordKey = await crypto.subtle.importKey(
+                    'raw',
+                    encoder.encode(pwd),
+                    'PBKDF2',
+                    false,
+                    ['deriveKey']
+                );
+                
+                const key = await crypto.subtle.deriveKey(
+                    { name: 'PBKDF2', salt: encoder.encode('salt123'), iterations: 100000, hash: 'SHA-256' },
+                    passwordKey,
+                    { name: 'AES-GCM', length: 256 },
+                    false,
+                    ['decrypt']
+                );
+                
+                const decrypted = await crypto.subtle.decrypt(
+                    { name: 'AES-GCM', iv: iv },
+                    key,
+                    encrypted
+                );
+                
+                const decryptedString = new TextDecoder().decode(decrypted);
+                return JSON.parse(decryptedString);
+            };
+
             const handleLogin = async (e) => {
                 e.preventDefault();
                 const hash = await hashPassword(password);
@@ -241,6 +274,33 @@
                 }
                 
                 setAppleOutput(result);
+            };
+
+            const handleLoadBackup = async () => {
+                if (!encryptPassword.trim()) {
+                    showMessage('Enter encryption password', 'error');
+                    return;
+                }
+
+                setGithubStatus('Loading backup...');
+
+                try {
+                    const response = await fetch('https://raw.githubusercontent.com/c00lkiddpostshaxxs/c00lkiddpostshaxxs.github.io/main/buttons.json');
+                    const data = await response.json();
+
+                    if (!data.encrypted || !data.data) {
+                        showMessage('Invalid backup format', 'error');
+                        setGithubStatus('');
+                        return;
+                    }
+
+                    const decrypted = await decryptButtons(data.data, encryptPassword);
+                    setButtons(decrypted);
+                    showMessage('✓ Backup loaded & decrypted!', 'success');
+                    setGithubStatus('✓ Backup restored');
+                } catch (error) {
+                    setGithubStatus('✗ Error: ' + error.message);
+                }
             };
 
             const handleCommitToGithub = async () => {
@@ -445,7 +505,7 @@
                         {!githubAuthed ? (
                             <div style={{ marginBottom: '16px' }}>
                                 <p style={{ color: '#cbd5e1', marginBottom: '12px', fontSize: '14px' }}>
-                                    Click to authorize with GitHub. Your session lasts 'til you close the tab.
+                                    Click to authorize with GitHub. Your session expires after your first commit.
                                 </p>
                                 <button className="btn-primary" onClick={handleGitHubLogin} style={{ width: '100%', background: '#1f2937', border: '1px solid #374151' }}>
                                     🔗 Authorize with GitHub
@@ -468,6 +528,23 @@
                         </div>
                         <button className="btn-primary" onClick={handleCommitToGithub} style={{ width: '100%' }} disabled={!githubAuthed}>Encrypt & Commit to GitHub</button>
                         {githubStatus && <div className="git-status">{githubStatus}</div>}
+                    </div>
+
+                    <div className="section">
+                        <h2>📥 Load Encrypted Backup</h2>
+                        <p style={{ color: '#cbd5e1', marginBottom: '16px', fontSize: '14px' }}>
+                            Restore your buttons from the encrypted backup on GitHub. Enter your encryption password.
+                        </p>
+                        <div className="form-group">
+                            <label>Encryption Password</label>
+                            <input
+                                type="password"
+                                placeholder="Password to decrypt backup"
+                                value={encryptPassword}
+                                onChange={(e) => setEncryptPassword(e.target.value)}
+                            />
+                        </div>
+                        <button className="btn-primary" onClick={handleLoadBackup} style={{ width: '100%', background: '#8b5cf6' }}>Load & Decrypt Backup</button>
                     </div>
                 </div>
             );
