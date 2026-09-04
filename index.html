@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<link rel="icon" type="image/svg+xml" href="dashboard-icon.svg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unicode Toolkit Pro</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 2rem 1rem;
+        }
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 1300px;
+        }
+        h1 { font-size: 1.5rem; margin-bottom: 0.5rem; color: #333; }
+        .search-box {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        #searchInput {
+            flex: 1;
+            padding: 0.75rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 6px;
+            font-size: 0.95rem;
+        }
+        #searchInput:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        .test-box {
+            background: #f9fafb;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .test-box h2 { font-size: 1rem; color: #333; margin-bottom: 0.75rem; }
+        #testInput {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            margin-bottom: 0.75rem;
+            font-family: monospace;
+            min-height: 80px;
+            resize: vertical;
+        }
+        .test-outputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        .output-section {
+            background: white;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            padding: 0.75rem;
+        }
+        .output-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+        }
+        .output-content {
+            font-size: 0.9rem;
+            color: #333;
+            word-break: break-all;
+            min-height: 40px;
+            font-family: monospace;
+            line-height: 1.4;
+        }
+        .security-box {
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            display: none;
+        }
+        .security-box.green {
+            background: #dcfce7;
+            border: 1px solid #86efac;
+        }
+        .security-box.yellow {
+            background: #fef3c7;
+            border: 1px solid #fcd34d;
+        }
+        .security-box.orange {
+            background: #fed7aa;
+            border: 1px solid #fdba74;
+        }
+        .security-box.red {
+            background: #fecaca;
+            border: 1px solid #fca5a5;
+        }
+        .security-header {
+            font-size: 0.95rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .security-green { color: #15803d; }
+        .security-yellow { color: #b45309; }
+        .security-orange { color: #c2410c; }
+        .security-red { color: #dc2626; }
+        .security-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+            margin-bottom: 0.25rem;
+            font-size: 0.85rem;
+        }
+        .security-item:last-child { margin-bottom: 0; }
+        .char-counter {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+        .counter-item {
+            background: #f3f4f6;
+            border-radius: 6px;
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        .counter-num { color: #667eea; font-size: 1.1rem; margin-right: 0.25rem; }
+        .character-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .char-card {
+            background: #fafafa;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .char-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1);
+            transform: translateY(-2px);
+        }
+        .char-button {
+            width: 100%;
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: all 0.2s;
+        }
+        .char-button:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); }
+        .char-button.copied { background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important; }
+        .char-title { font-weight: 600; font-size: 0.85rem; color: #333; margin-bottom: 0.25rem; line-height: 1.2; }
+        .char-code { font-size: 0.75rem; color: #999; font-family: monospace; }
+        .char-desc { font-size: 0.75rem; color: #666; margin-top: 0.5rem; }
+        
+        .mark-btn { background: linear-gradient(135deg, #64748b 0%, #475569 100%); }
+        .embed-btn { background: linear-gradient(135deg, #a855f7 0%, #9333ea 100%); }
+        .override-btn { background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%); }
+        .isolate-btn { background: linear-gradient(135deg, #84cc16 0%, #65a30d 100%); }
+        .zwspace-btn { background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%); }
+        .word-btn { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
+        .space-btn { background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); }
+        .math-btn { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); }
+        .arrow-btn { background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); }
+        .punct-btn { background: linear-gradient(135deg, #ec4899 0%, #db2777 100%); }
+        .bullet-btn { background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%); }
+        .star-btn { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
+        .curr-btn { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
+        .frac-btn { background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%); }
+        .super-btn { background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); }
+        .letter-btn { background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); }
+        .accent-btn { background: linear-gradient(135deg, #d946ef 0%, #c026d3 100%); }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+        .modal.active { display: flex; align-items: center; justify-content: center; }
+        .modal-content {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .modal-close {
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #999;
+        }
+        .modal-close:hover { color: #333; }
+        .modal-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            margin-top: 0;
+        }
+        .modal-field {
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .modal-field:last-child { border-bottom: none; }
+        .modal-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #666;
+            text-transform: uppercase;
+            margin-bottom: 0.25rem;
+        }
+        .modal-value {
+            font-size: 0.95rem;
+            color: #333;
+            font-family: monospace;
+            word-break: break-all;
+        }
+        .modal-example {
+            font-size: 0.9rem;
+            color: #555;
+            font-style: italic;
+            background: #f9fafb;
+            padding: 0.75rem;
+            border-radius: 4px;
+            margin-top: 0.5rem;
+        }
+        @media (max-width: 768px) {
+            .container { padding: 1rem; }
+            .test-outputs { grid-template-columns: 1fr; }
+            .character-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+            .char-card { padding: 0.75rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Unicode Toolkit Pro</h1>
+        
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Search characters... (e.g., 'joiner', 'arrow', 'space')">
+        </div>
+
+        <div class="test-box">
+            <h2>Test Characters Live</h2>
+            <textarea id="testInput" placeholder="Type or paste copied characters to test..."></textarea>
+            
+            <div class="char-counter" id="charCounter"></div>
+            
+            <div id="securityBox" class="security-box"></div>
+            
+            <div class="test-outputs">
+                <div class="output-section">
+                    <div class="output-label">Visual Output</div>
+                    <div class="output-content" id="visualOutput"></div>
+                </div>
+                <div class="output-section">
+                    <div class="output-label">Hex Bytes (UTF-8)</div>
+                    <div class="output-content" id="hexOutput"></div>
+                </div>
+            </div>
+
+            <div class="output-section">
+                <div class="output-label">Character Breakdown (with hidden chars revealed)</div>
+                <div class="output-content" id="highlightOutput" style="background: white; border: 1px solid #d1d5db; border-radius: 6px; padding: 0.75rem;"></div>
+            </div>
+        </div>
+
+        <div class="character-grid" id="characterGrid"></div>
+    </div>
+
+    <div id="inspectModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <h3 class="modal-title" id="modalTitle"></h3>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <script>
+        const charData = [
+            { name: 'Left-to-Right Mark', fullName: 'LRM - Left-to-Right Mark', code: 0x200E, cat: 'mark', abbr: 'LRM', desc: 'Marks following text as LTR', example: 'English text with LRM forces direction left', tags: 'direction ltr', isInvisible: true, isBiDi: true },
+            { name: 'Right-to-Left Mark', fullName: 'RLM - Right-to-Left Mark', code: 0x200F, cat: 'mark', abbr: 'RLM', desc: 'Marks following text as RTL', example: 'مرحبا with RLM controls direction', tags: 'direction rtl', isInvisible: true, isBiDi: true },
+            { name: 'Arabic Letter Mark', fullName: 'ALM - Arabic Letter Mark', code: 0x061C, cat: 'mark', abbr: 'ALM', desc: 'Smart bidirectional handling', example: 'ALM works with Arabic ع and Hebrew ק', tags: 'direction arabic', isInvisible: true, isBiDi: true },
+            { name: 'LTR Embedding', fullName: 'LRE - Left-to-Right Embedding', code: 0x202A, cat: 'embed', abbr: 'LRE', desc: 'Creates LTR block until PDF', example: 'LRE text here مرحبا PDF', tags: 'direction ltr', isInvisible: true, isBiDi: true },
+            { name: 'RTL Embedding', fullName: 'RLE - Right-to-Left Embedding', code: 0x202B, cat: 'embed', abbr: 'RLE', desc: 'Creates RTL block until PDF', example: 'RLE English text here PDF', tags: 'direction rtl', isInvisible: true, isBiDi: true },
+            { name: 'Pop Formatting', fullName: 'PDF - Pop Directional Formatting', code: 0x202C, cat: 'embed', abbr: 'PDF', desc: 'Cancels any embedding', example: 'PDF terminates embedding and override controls', tags: 'direction control', isInvisible: true, isBiDi: true },
+            { name: 'LTR Override', fullName: 'LRO - Left-to-Right Override', code: 0x202D, cat: 'override', abbr: 'LRO', desc: 'Forces text to display LTR', example: 'LRO can reverse content display', tags: 'direction ltr override', isInvisible: true, isBiDi: true, isSuspicious: true },
+            { name: 'RTL Override', fullName: 'RLO - Right-to-Left Override', code: 0x202E, cat: 'override', abbr: 'RLO', desc: 'Forcefully reverses text direction', example: 'RLO obscures text by reversing visually', tags: 'direction rtl override reverse', isInvisible: true, isBiDi: true, isSuspicious: true },
+            { name: 'LTR Isolate', fullName: 'LRI - Left-to-Right Isolate', code: 0x2066, cat: 'isolate', abbr: 'LRI', desc: 'Modern LTR isolation', example: 'LRI isolates text direction PDI', tags: 'direction ltr', isInvisible: true, isBiDi: true },
+            { name: 'RTL Isolate', fullName: 'RLI - Right-to-Left Isolate', code: 0x2067, cat: 'isolate', abbr: 'RLI', desc: 'Modern RTL isolation', example: 'RLI isolates text direction PDI', tags: 'direction rtl', isInvisible: true, isBiDi: true },
+            { name: 'First Strong Isolate', fullName: 'FSI - First Strong Isolate', code: 0x2068, cat: 'isolate', abbr: 'FSI', desc: 'Auto-detects from first char', example: 'FSI automatically detects text direction PDI', tags: 'direction auto', isInvisible: true, isBiDi: true },
+            { name: 'Pop Directional Isolate', fullName: 'PDI - Pop Directional Isolate', code: 0x2069, cat: 'isolate', abbr: 'PDI', desc: 'Ends isolate block', example: 'PDI terminates isolate controls', tags: 'direction control', isInvisible: true, isBiDi: true },
+            { name: 'Zero Width Space', fullName: 'ZWS - Zero Width Space', code: 0x200B, cat: 'zwspace', abbr: 'ZWS', desc: 'Invisible space for line breaks', example: 'Word ZWS break at invisible point', tags: 'zero-width space', isInvisible: true },
+            { name: 'Zero Width Non-Joiner', fullName: 'ZWNJ - Zero Width Non-Joiner', code: 0x200C, cat: 'zwspace', abbr: 'ZWNJ', desc: 'Prevents character joining', example: 'f ZWNJ i prevents ligature in fi', tags: 'zero-width joiner', isInvisible: true },
+            { name: 'Zero Width Joiner', fullName: 'ZWJ - Zero Width Joiner', code: 0x200D, cat: 'zwspace', abbr: 'ZWJ', desc: 'Forces character joining', example: 'ZWJ combines characters for sequences', tags: 'zero-width joiner', isInvisible: true },
+            { name: 'Word Joiner', fullName: 'WJ - Word Joiner', code: 0x2060, cat: 'word', abbr: 'WJ', desc: 'Keeps words without breaking', example: 'No WJ break possible within bounds', tags: 'joiner line-break', isInvisible: true },
+            { name: 'Soft Hyphen', fullName: 'SHY - Soft Hyphen', code: 0x00AD, cat: 'word', abbr: 'SHY', desc: 'Invisible hyphen when wrapped', example: 'Super SHY cali SHY fragi SHY listic', tags: 'hyphen line-break', isInvisible: true },
+            { name: 'Non-Breaking Hyphen', fullName: 'NBHy - Non-Breaking Hyphen', code: 0x2011, cat: 'word', abbr: 'NBHy', desc: 'Hyphen preventing line breaks', example: 'E-mail never breaks with non-breaking hyphen', tags: 'hyphen line-break' },
+            { name: 'Non-Breaking Space', fullName: 'NBSP - Non-Breaking Space', code: 0x00A0, cat: 'word', abbr: 'NBSP', desc: 'Space preventing wrapping', example: 'John NBSP Smith stay on same line', tags: 'space line-break' },
+            { name: 'En Space', fullName: 'EnSp - En Space', code: 0x2002, cat: 'space', abbr: 'EnSp', desc: 'Width of letter N', example: 'Text EnSp separated by en width', tags: 'space typography' },
+            { name: 'Em Space', fullName: 'EmSp - Em Space', code: 0x2003, cat: 'space', abbr: 'EmSp', desc: 'Width of letter M', example: 'Text EmSp separated by em width', tags: 'space typography' },
+            { name: 'Three-Per-Em Space', fullName: 'ThPE - Three-Per-Em Space', code: 0x2004, cat: 'space', abbr: 'ThPE', desc: 'One third of em width', example: 'Thin ThPE spacing in typography', tags: 'space typography' },
+            { name: 'Four-Per-Em Space', fullName: 'FoPE - Four-Per-Em Space', code: 0x2005, cat: 'space', abbr: 'FoPE', desc: 'One quarter of em width', example: 'Narrow FoPE used in design', tags: 'space typography' },
+            { name: 'Thin Space', fullName: 'ThSp - Thin Space', code: 0x2009, cat: 'space', abbr: 'ThSp', desc: 'Very small space', example: 'Fine ThSp spacing for typography', tags: 'space typography' },
+            { name: 'Multiplication Sign', fullName: 'Multiplication Sign', code: 0x00D7, cat: 'math', abbr: '×', desc: 'Math multiplication operator', example: '3 × 5 equals 15', tags: 'math operator' },
+            { name: 'Division Sign', fullName: 'Division Sign', code: 0x00F7, cat: 'math', abbr: '÷', desc: 'Math division operator', example: '20 ÷ 4 equals 5', tags: 'math operator' },
+            { name: 'Plus-Minus Sign', fullName: 'Plus-Minus Sign', code: 0x00B1, cat: 'math', abbr: '±', desc: 'Plus-minus operator', example: 'Result is 5 ± 2', tags: 'math operator' },
+            { name: 'Minus-Plus Sign', fullName: 'Minus-Plus Sign', code: 0x2213, cat: 'math', abbr: '∓', desc: 'Minus-plus operator', example: 'Alternative form is ∓ notation', tags: 'math operator' },
+            { name: 'Not Equal to', fullName: 'Not Equal to', code: 0x2260, cat: 'math', abbr: '≠', desc: 'Not equal comparison', example: 'x ≠ y means not equal', tags: 'math operator' },
+            { name: 'Approximately Equal', fullName: 'Approximately Equal', code: 0x2248, cat: 'math', abbr: '≈', desc: 'Approximately equal', example: 'π ≈ 3.14159', tags: 'math operator' },
+            { name: 'Less Than or Equal', fullName: 'Less Than or Equal', code: 0x2264, cat: 'math', abbr: '≤', desc: 'Less than or equal', example: 'x ≤ 10 is valid', tags: 'math operator' },
+            { name: 'Greater Than or Equal', fullName: 'Greater Than or Equal', code: 0x2265, cat: 'math', abbr: '≥', desc: 'Greater than or equal', example: 'n ≥ 0 for natural', tags: 'math operator' },
+            { name: 'Infinity', fullName: 'Infinity', code: 0x221E, cat: 'math', abbr: '∞', desc: 'Infinity symbol', example: 'Limit approaches ∞', tags: 'math symbol' },
+            { name: 'Square Root', fullName: 'Square Root', code: 0x221A, cat: 'math', abbr: '√', desc: 'Square root symbol', example: '√16 equals 4', tags: 'math symbol' },
+            { name: 'Cube Root', fullName: 'Cube Root', code: 0x221B, cat: 'math', abbr: '∛', desc: 'Cube root symbol', example: '∛27 equals 3', tags: 'math symbol' },
+            { name: 'Fourth Root', fullName: 'Fourth Root', code: 0x221C, cat: 'math', abbr: '∜', desc: 'Fourth root symbol', example: '∜16 equals 2', tags: 'math symbol' },
+            { name: 'Summation', fullName: 'Summation', code: 0x2211, cat: 'math', abbr: '∑', desc: 'Summation operator', example: '∑(i=1 to n) equals total', tags: 'math symbol' },
+            { name: 'Product', fullName: 'Product', code: 0x220F, cat: 'math', abbr: '∏', desc: 'Product operator', example: '∏(i=1 to n) equals result', tags: 'math symbol' },
+            { name: 'Integral', fullName: 'Integral', code: 0x222B, cat: 'math', abbr: '∫', desc: 'Integral operator', example: '∫ f(x) dx computes area', tags: 'math symbol' },
+            { name: 'Partial Derivative', fullName: 'Partial Derivative', code: 0x2202, cat: 'math', abbr: '∂', desc: 'Partial derivative symbol', example: '∂f/∂x is partial derivative', tags: 'math symbol' },
+            { name: 'Nabla', fullName: 'Nabla', code: 0x2207, cat: 'math', abbr: '∇', desc: 'Nabla gradient operator', example: '∇f computes gradient', tags: 'math symbol' },
+            { name: 'Rightwards Arrow', fullName: 'Rightwards Arrow', code: 0x2192, cat: 'arrow', abbr: '→', desc: 'Right arrow', example: 'Process flows → next step', tags: 'arrow direction' },
+            { name: 'Leftwards Arrow', fullName: 'Leftwards Arrow', code: 0x2190, cat: 'arrow', abbr: '←', desc: 'Left arrow', example: 'Previous step ← current', tags: 'arrow direction' },
+            { name: 'Upwards Arrow', fullName: 'Upwards Arrow', code: 0x2191, cat: 'arrow', abbr: '↑', desc: 'Up arrow', example: 'Increase ↑ the value', tags: 'arrow direction' },
+            { name: 'Downwards Arrow', fullName: 'Downwards Arrow', code: 0x2193, cat: 'arrow', abbr: '↓', desc: 'Down arrow', example: 'Decrease ↓ the value', tags: 'arrow direction' },
+            { name: 'Left Right Arrow', fullName: 'Left Right Arrow', code: 0x2194, cat: 'arrow', abbr: '↔', desc: 'Bidirectional arrow', example: 'Mapping A ↔ B', tags: 'arrow direction' },
+            { name: 'Double Rightwards Arrow', fullName: 'Rightwards Double Arrow', code: 0x21D2, cat: 'arrow', abbr: '⇒', desc: 'Double right arrow', example: 'Implication P ⇒ Q', tags: 'arrow direction' },
+            { name: 'Double Leftwards Arrow', fullName: 'Leftwards Double Arrow', code: 0x21D0, cat: 'arrow', abbr: '⇐', desc: 'Double left arrow', example: 'Reverse implication Q ⇐ P', tags: 'arrow direction' },
+            { name: 'Double Left Right Arrow', fullName: 'Left Right Double Arrow', code: 0x21D4, cat: 'arrow', abbr: '⇔', desc: 'Double bidirectional arrow', example: 'Equivalence A ⇔ B', tags: 'arrow direction' },
+            { name: 'Northeast Arrow', fullName: 'Northeast Arrow', code: 0x2197, cat: 'arrow', abbr: '↗', desc: 'Diagonal up-right', example: 'Direction ↗ northeast', tags: 'arrow direction' },
+            { name: 'Northwest Arrow', fullName: 'Northwest Arrow', code: 0x2196, cat: 'arrow', abbr: '↖', desc: 'Diagonal up-left', example: 'Direction ↖ northwest', tags: 'arrow direction' },
+            { name: 'Southeast Arrow', fullName: 'Southeast Arrow', code: 0x2198, cat: 'arrow', abbr: '↘', desc: 'Diagonal down-right', example: 'Direction ↘ southeast', tags: 'arrow direction' },
+            { name: 'Southwest Arrow', fullName: 'Southwest Arrow', code: 0x2199, cat: 'arrow', abbr: '↙', desc: 'Diagonal down-left', example: 'Direction ↙ southwest', tags: 'arrow direction' },
+            { name: 'Bullet', fullName: 'Bullet', code: 0x2022, cat: 'bullet', abbr: '•', desc: 'Bullet point', example: 'Item • First point', tags: 'symbol list' },
+            { name: 'Degree Sign', fullName: 'Degree Sign', code: 0x00B0, cat: 'letter', abbr: '°', desc: 'Degree symbol', example: 'Temperature 72°F', tags: 'symbol temperature' },
+            { name: 'Prime', fullName: 'Prime', code: 0x2032, cat: 'letter', abbr: '′', desc: 'Prime symbol (minutes)', example: 'Angle 45° 30′ 15″', tags: 'symbol measurement' },
+            { name: 'Double Prime', fullName: 'Double Prime', code: 0x2033, cat: 'letter', abbr: '″', desc: 'Double prime (seconds)', example: 'Angle 45° 30′ 15″', tags: 'symbol measurement' },
+            { name: 'Triple Prime', fullName: 'Triple Prime', code: 0x2034, cat: 'letter', abbr: '‴', desc: 'Triple prime symbol', example: 'Measurement 5‴ tertia', tags: 'symbol measurement' },
+            { name: 'Micro Sign', fullName: 'Micro Sign', code: 0x00B5, cat: 'letter', abbr: 'µ', desc: 'Micro prefix (1e-6)', example: 'Wavelength 1000 µm', tags: 'symbol prefix' },
+            { name: 'Angstrom Sign', fullName: 'Angstrom Sign', code: 0x212B, cat: 'letter', abbr: 'Å', desc: 'Angstrom unit', example: 'Wavelength 5000 Å', tags: 'symbol measurement' },
+            { name: 'Ohm Sign', fullName: 'Ohm Sign', code: 0x2126, cat: 'letter', abbr: 'Ω', desc: 'Ohm resistance unit', example: 'Resistance 100 Ω', tags: 'symbol electrical' },
+            { name: 'Copyright Sign', fullName: 'Copyright Sign', code: 0x00A9, cat: 'letter', abbr: '©', desc: 'Copyright symbol', example: 'Copyright © 2024', tags: 'symbol copyright' },
+            { name: 'Registered Sign', fullName: 'Registered Trademark', code: 0x00AE, cat: 'letter', abbr: '®', desc: 'Registered trademark', example: 'Brand® Registered', tags: 'symbol trademark' },
+            { name: 'Trade Mark Sign', fullName: 'Trade Mark Sign', code: 0x2122, cat: 'letter', abbr: '™', desc: 'Trademark symbol', example: 'Brand™ Trademark', tags: 'symbol trademark' },
+            { name: 'Pilcrow', fullName: 'Pilcrow', code: 0x00B6, cat: 'punct', abbr: '¶', desc: 'Paragraph mark', example: 'Section ¶ 2 continues', tags: 'punctuation' },
+            { name: 'Section Sign', fullName: 'Section Sign', code: 0x00A7, cat: 'punct', abbr: '§', desc: 'Section symbol', example: 'See § 3.2 below', tags: 'punctuation' },
+            { name: 'Dagger', fullName: 'Dagger', code: 0x2020, cat: 'punct', abbr: '†', desc: 'Dagger reference mark', example: 'Note† with dagger', tags: 'punctuation' },
+            { name: 'Double Dagger', fullName: 'Double Dagger', code: 0x2021, cat: 'punct', abbr: '‡', desc: 'Double dagger mark', example: 'Note‡ with double dagger', tags: 'punctuation' },
+            { name: 'Ellipsis', fullName: 'Horizontal Ellipsis', code: 0x2026, cat: 'punct', abbr: '…', desc: 'Ellipsis punctuation', example: 'Wait… something coming', tags: 'punctuation' },
+            { name: 'Interrobang', fullName: 'Interrobang', code: 0x203D, cat: 'punct', abbr: '‽', desc: 'Question-exclamation combo', example: 'What‽ Really‽', tags: 'punctuation' },
+            { name: 'Double Exclamation Mark', fullName: 'Double Exclamation Mark', code: 0x203C, cat: 'punct', abbr: '‼', desc: 'Double exclamation', example: 'Wow‼ Amazing‼', tags: 'punctuation' },
+            { name: 'Double Question Mark', fullName: 'Double Question Mark', code: 0x2047, cat: 'punct', abbr: '⁇', desc: 'Double question', example: 'Really⁇ Sure⁇', tags: 'punctuation' },
+            { name: 'Question Exclamation', fullName: 'Question Exclamation Mark', code: 0x2048, cat: 'punct', abbr: '⁈', desc: 'Question then exclamation', example: 'What⁈ Incredible⁈', tags: 'punctuation' },
+            { name: 'Exclamation Question', fullName: 'Exclamation Question Mark', code: 0x2049, cat: 'punct', abbr: '⁉', desc: 'Exclamation then question', example: 'Wow⁉ Really⁉', tags: 'punctuation' },
+            { name: 'Dollar Sign', fullName: 'Dollar Sign', code: 0x0024, cat: 'curr', abbr: '$', desc: 'Dollar currency', example: 'Price $99.99', tags: 'currency money' },
+            { name: 'Euro Sign', fullName: 'Euro Sign', code: 0x20AC, cat: 'curr', abbr: '€', desc: 'Euro currency', example: 'Cost €50', tags: 'currency money' },
+            { name: 'Pound Sign', fullName: 'Pound Sterling Sign', code: 0x00A3, cat: 'curr', abbr: '£', desc: 'Pound currency', example: 'Amount £25', tags: 'currency money' },
+            { name: 'Yen Sign', fullName: 'Yen Sign', code: 0x00A5, cat: 'curr', abbr: '¥', desc: 'Yen currency', example: 'Price ¥1000', tags: 'currency money' },
+            { name: 'Indian Rupee Sign', fullName: 'Indian Rupee Sign', code: 0x20B9, cat: 'curr', abbr: '₹', desc: 'Indian rupee', example: 'Cost ₹500', tags: 'currency money' },
+            { name: 'Chinese Yuan', fullName: 'Chinese Yuan Sign', code: 0x00A5, cat: 'curr', abbr: '¥', desc: 'Yuan currency', example: 'Price ¥88', tags: 'currency money' },
+            { name: 'Won Sign', fullName: 'Korean Won Sign', code: 0x20A9, cat: 'curr', abbr: '₩', desc: 'Korean won', example: 'Price ₩10000', tags: 'currency money' },
+            { name: 'Ruble Sign', fullName: 'Russian Ruble Sign', code: 0x20BD, cat: 'curr', abbr: '₽', desc: 'Russian ruble', example: 'Cost ₽1000', tags: 'currency money' },
+            { name: 'Shekel Sign', fullName: 'Shekel Sign', code: 0x20AA, cat: 'curr', abbr: '₪', desc: 'Israeli shekel', example: 'Price ₪100', tags: 'currency money' },
+            { name: 'Half', fullName: 'Vulgar Fraction One Half', code: 0x00BD, cat: 'frac', abbr: '½', desc: 'One half fraction', example: '1½ cups of flour', tags: 'fraction math' },
+            { name: 'Quarter', fullName: 'Vulgar Fraction One Quarter', code: 0x00BC, cat: 'frac', abbr: '¼', desc: 'One quarter fraction', example: '¼ teaspoon salt', tags: 'fraction math' },
+            { name: 'Three Quarters', fullName: 'Vulgar Fraction Three Quarters', code: 0x00BE, cat: 'frac', abbr: '¾', desc: 'Three quarters fraction', example: '¾ completed', tags: 'fraction math' },
+            { name: 'One Third', fullName: 'Vulgar Fraction One Third', code: 0x2153, cat: 'frac', abbr: '⅓', desc: 'One third fraction', example: '⅓ of total', tags: 'fraction math' },
+            { name: 'Two Thirds', fullName: 'Vulgar Fraction Two Thirds', code: 0x2154, cat: 'frac', abbr: '⅔', desc: 'Two thirds fraction', example: '⅔ progress', tags: 'fraction math' },
+            { name: 'One Eighth', fullName: 'Vulgar Fraction One Eighth', code: 0x215B, cat: 'frac', abbr: '⅛', desc: 'One eighth fraction', example: '⅛ portions', tags: 'fraction math' },
+            { name: 'Three Eighths', fullName: 'Vulgar Fraction Three Eighths', code: 0x215C, cat: 'frac', abbr: '⅜', desc: 'Three eighths', example: '⅜ measurement', tags: 'fraction math' },
+            { name: 'Five Eighths', fullName: 'Vulgar Fraction Five Eighths', code: 0x215D, cat: 'frac', abbr: '⅝', desc: 'Five eighths', example: '⅝ complete', tags: 'fraction math' },
+            { name: 'Seven Eighths', fullName: 'Vulgar Fraction Seven Eighths', code: 0x215E, cat: 'frac', abbr: '⅞', desc: 'Seven eighths', example: '⅞ done', tags: 'fraction math' },
+            { name: 'Superscript One', fullName: 'Superscript One', code: 0x00B9, cat: 'super', abbr: '¹', desc: 'Superscript 1', example: 'a¹ to the power', tags: 'superscript math' },
+            { name: 'Superscript Two', fullName: 'Superscript Two', code: 0x00B2, cat: 'super', abbr: '²', desc: 'Superscript 2', example: '5² equals 25', tags: 'superscript math' },
+            { name: 'Superscript Three', fullName: 'Superscript Three', code: 0x00B3, cat: 'super', abbr: '³', desc: 'Superscript 3', example: '2³ equals 8', tags: 'superscript math' },
+            { name: 'Subscript Zero', fullName: 'Subscript Zero', code: 0x2080, cat: 'super', abbr: '₀', desc: 'Subscript 0', example: 'x₀ initial value', tags: 'subscript math' },
+            { name: 'Subscript One', fullName: 'Subscript One', code: 0x2081, cat: 'super', abbr: '₁', desc: 'Subscript 1', example: 'H₂O molecule', tags: 'subscript math' },
+            { name: 'Subscript Two', fullName: 'Subscript Two', code: 0x2082, cat: 'super', abbr: '₂', desc: 'Subscript 2', example: 'O₂ oxygen', tags: 'subscript math' },
+            { name: 'Subscript Three', fullName: 'Subscript Three', code: 0x2083, cat: 'super', abbr: '₃', desc: 'Subscript 3', example: 'N₃ nitrate', tags: 'subscript math' },
+            { name: 'Per Mille', fullName: 'Per Mille Sign', code: 0x2030, cat: 'letter', abbr: '‰', desc: 'Per thousand', example: 'Growth rate 5‰', tags: 'symbol percent' },
+            { name: 'Per Ten Thousand', fullName: 'Per Ten Thousand Sign', code: 0x2031, cat: 'letter', abbr: '‱', desc: 'Per ten thousand', example: 'Rate 1‱', tags: 'symbol percent' },
+            { name: 'Caret Insertion Point', fullName: 'Caret Insertion Point', code: 0x2038, cat: 'punct', abbr: '‸', desc: 'Caret mark', example: 'Edit ‸ here', tags: 'punctuation' },
+            { name: 'Inverted Exclamation', fullName: 'Inverted Exclamation Mark', code: 0x00A1, cat: 'punct', abbr: '¡', desc: 'Inverted exclamation (Spanish)', example: '¡Hola amigos!', tags: 'punctuation' },
+            { name: 'Inverted Question', fullName: 'Inverted Question Mark', code: 0x00BF, cat: 'punct', abbr: '¿', desc: 'Inverted question (Spanish)', example: '¿Cómo estás?', tags: 'punctuation' },
+            { name: 'Left Single Quotation', fullName: 'Left Single Quotation Mark', code: 0x2018, cat: 'punct', abbr: "'", desc: 'Curly left single quote', example: "'This is quoted'", tags: 'punctuation' },
+            { name: 'Right Single Quotation', fullName: 'Right Single Quotation Mark', code: 0x2019, cat: 'punct', abbr: "'", desc: 'Curly right single quote', example: "'This is quoted'", tags: 'punctuation' },
+            { name: 'Left Double Quotation', fullName: 'Left Double Quotation Mark', code: 0x201C, cat: 'punct', abbr: '"', desc: 'Curly left double quote', example: '"This is quoted"', tags: 'punctuation' },
+            { name: 'Right Double Quotation', fullName: 'Right Double Quotation Mark', code: 0x201D, cat: 'punct', abbr: '"', desc: 'Curly right double quote', example: '"This is quoted"', tags: 'punctuation' },
+            { name: 'Guillemet Left', fullName: 'Left-Pointing Double Angle Quotation Mark', code: 0x00AB, cat: 'punct', abbr: '«', desc: 'French left quote', example: '« Bonjour »', tags: 'punctuation' },
+            { name: 'Guillemet Right', fullName: 'Right-Pointing Double Angle Quotation Mark', code: 0x00BB, cat: 'punct', abbr: '»', desc: 'French right quote', example: '« Bonjour »', tags: 'punctuation' },
+            { name: 'Single Left Angle', fullName: 'Single Left-Pointing Angle Quotation Mark', code: 0x2039, cat: 'punct', abbr: '‹', desc: 'Single angle quote left', example: '‹ Quoted ›', tags: 'punctuation' },
+            { name: 'Single Right Angle', fullName: 'Single Right-Pointing Angle Quotation Mark', code: 0x203A, cat: 'punct', abbr: '›', desc: 'Single angle quote right', example: '‹ Quoted ›', tags: 'punctuation' },
+            { name: 'Em Dash', fullName: 'Em Dash', code: 0x2014, cat: 'punct', abbr: '—', desc: 'Long dash for emphasis', example: 'Wait—this is important', tags: 'punctuation' },
+            { name: 'En Dash', fullName: 'En Dash', code: 0x2013, cat: 'punct', abbr: '–', desc: 'Medium dash for ranges', example: '2000–2024 timeframe', tags: 'punctuation' },
+            { name: 'Hyphen', fullName: 'Hyphen-Minus', code: 0x002D, cat: 'punct', abbr: '-', desc: 'Standard hyphen', example: 'twenty-five years', tags: 'punctuation' }
+        ];
+
+        const modal = document.getElementById('inspectModal');
+        const modalClose = document.querySelector('.modal-close');
+        const searchInput = document.getElementById('searchInput');
+        const testInput = document.getElementById('testInput');
+        const visualOutput = document.getElementById('visualOutput');
+        const hexOutput = document.getElementById('hexOutput');
+        const highlightOutput = document.getElementById('highlightOutput');
+        const charCounter = document.getElementById('charCounter');
+        const securityBox = document.getElementById('securityBox');
+        const characterGrid = document.getElementById('characterGrid');
+
+        function charToUtf8Hex(char) {
+            const encoded = new TextEncoder().encode(char);
+            return Array.from(encoded).map(b => b.toString(16).toUpperCase().padStart(2, '0')).join(' ');
+        }
+
+        function charToUtf16Hex(char) {
+            const code = char.charCodeAt(0);
+            return code.toString(16).toUpperCase().padStart(4, '0');
+        }
+
+        function analyzeSecurityRisk(text) {
+            const biDiChars = [0x200E, 0x200F, 0x061C, 0x202A, 0x202B, 0x202C, 0x202D, 0x202E, 0x2066, 0x2067, 0x2068, 0x2069];
+            const zwChars = [0x200B, 0x200C, 0x200D, 0x2060, 0x00AD];
+            const suspiciousChars = [0x202E, 0x202D];
+
+            const hasInvisible = Array.from(text).some(c => zwChars.includes(c.charCodeAt(0)));
+            const hasBiDi = Array.from(text).some(c => biDiChars.includes(c.charCodeAt(0)));
+            const hasSuspicious = Array.from(text).some(c => suspiciousChars.includes(c.charCodeAt(0)));
+            const hasMultipleBiDi = (text.match(/[\u200E\u200F\u061C\u202A\u202B\u202C\u202D\u202E\u2066\u2067\u2068\u2069]/g) || []).length > 2;
+            const isFilename = text.includes('.') && /[a-zA-Z0-9\-_\u202E\u202D]+\.[a-zA-Z]{2,}$/.test(text);
+            const hasArabicOrHebrew = /[\u0600-\u06FF\u0590-\u05FF]/.test(text);
+
+            let risk = 'green';
+            let riskLevel = '🟢 Safe';
+            let warnings = [];
+
+            if (!hasInvisible && !hasBiDi) {
+                warnings.push('No hidden controls detected.');
+            } else if (hasInvisible && !hasBiDi) {
+                risk = 'yellow';
+                riskLevel = '🟡 Caution';
+                warnings.push('Contains hidden formatting characters.');
+            } else if (hasBiDi && !hasSuspicious) {
+                if (hasArabicOrHebrew) {
+                    risk = 'yellow';
+                    riskLevel = '🟡 Caution';
+                    warnings.push('Contains bidirectional text (likely legitimate for Arabic/Hebrew).');
+                } else if (hasMultipleBiDi) {
+                    risk = 'orange';
+                    riskLevel = '🟠 Suspicious';
+                    warnings.push('Multiple BiDi controls detected without clear text purpose.');
+                } else {
+                    risk = 'yellow';
+                    riskLevel = '🟡 Caution';
+                    warnings.push('Contains bidirectional formatting controls.');
+                }
+            } else if (hasSuspicious) {
+                if (isFilename) {
+                    risk = 'red';
+                    riskLevel = '🔴 Dangerous';
+                    warnings.push('⚠️ Filename appears visually misleading (uses direction override).');
+                } else if (hasArabicOrHebrew) {
+                    risk = 'yellow';
+                    riskLevel = '🟡 Caution';
+                    warnings.push('Contains RLO/LRO (may be legitimate for mixed-language text).');
+                } else {
+                    risk = 'orange';
+                    riskLevel = '🟠 Suspicious';
+                    warnings.push('Contains text direction override (could hide content).');
+                }
+            }
+
+            return { risk, riskLevel, warnings };
+        }
+
+        function renderCharacters(filter = '') {
+            characterGrid.innerHTML = '';
+            const filtered = charData.filter(c => 
+                c.name.toLowerCase().includes(filter.toLowerCase()) ||
+                c.abbr.toLowerCase().includes(filter.toLowerCase()) ||
+                c.tags.includes(filter.toLowerCase()) ||
+                c.desc.toLowerCase().includes(filter.toLowerCase()) ||
+                c.fullName.toLowerCase().includes(filter.toLowerCase())
+            );
+
+            filtered.forEach(char => {
+                const charCode = String.fromCharCode(char.code);
+                const hex = charToUtf16Hex(charCode);
+                const card = document.createElement('div');
+                card.className = 'char-card';
+                
+                let catClass = 'mark-btn';
+                if (char.cat === 'embed') catClass = 'embed-btn';
+                else if (char.cat === 'override') catClass = 'override-btn';
+                else if (char.cat === 'isolate') catClass = 'isolate-btn';
+                else if (char.cat === 'zwspace') catClass = 'zwspace-btn';
+                else if (char.cat === 'word') catClass = 'word-btn';
+                else if (char.cat === 'space') catClass = 'space-btn';
+                else if (char.cat === 'math') catClass = 'math-btn';
+                else if (char.cat === 'arrow') catClass = 'arrow-btn';
+                else if (char.cat === 'bullet') catClass = 'bullet-btn';
+                else if (char.cat === 'star') catClass = 'star-btn';
+                else if (char.cat === 'curr') catClass = 'curr-btn';
+                else if (char.cat === 'frac') catClass = 'frac-btn';
+                else if (char.cat === 'super') catClass = 'super-btn';
+                else if (char.cat === 'letter') catClass = 'letter-btn';
+                else if (char.cat === 'punct') catClass = 'punct-btn';
+                else if (char.cat === 'accent') catClass = 'accent-btn';
+
+                card.innerHTML = `
+                    <button class="char-button ${catClass}" data-code="${char.code}">Copy</button>
+                    <div class="char-title">${char.fullName}</div>
+                    <div class="char-code">U+${hex}</div>
+                    <div class="char-desc">${char.desc}</div>
+                `;
+
+                card.querySelector('button').addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const charCode = String.fromCharCode(char.code);
+                    navigator.clipboard.writeText(charCode).then(() => {
+                        const btn = e.target;
+                        const original = btn.textContent;
+                        btn.textContent = 'Copied!';
+                        btn.classList.add('copied');
+                        setTimeout(() => {
+                            btn.textContent = original;
+                            btn.classList.remove('copied');
+                        }, 2000);
+                    });
+                });
+
+                card.addEventListener('click', () => {
+                    const charCode = String.fromCharCode(char.code);
+                    const utf8 = charToUtf8Hex(charCode);
+                    const utf16 = charToUtf16Hex(charCode);
+                    
+                    document.getElementById('modalTitle').textContent = char.fullName;
+                    document.getElementById('modalBody').innerHTML = `
+                        <div class="modal-field">
+                            <div class="modal-label">Abbreviation</div>
+                            <div class="modal-value">${char.abbr}</div>
+                        </div>
+                        <div class="modal-field">
+                            <div class="modal-label">Character</div>
+                            <div class="modal-value">${char.isInvisible ? '[Invisible]' : charCode}</div>
+                        </div>
+                        <div class="modal-field">
+                            <div class="modal-label">Unicode Code Point</div>
+                            <div class="modal-value">U+${utf16}</div>
+                        </div>
+                        <div class="modal-field">
+                            <div class="modal-label">UTF-8 Bytes</div>
+                            <div class="modal-value">${utf8}</div>
+                        </div>
+                        <div class="modal-field">
+                            <div class="modal-label">UTF-16 Code Unit</div>
+                            <div class="modal-value">${utf16}</div>
+                        </div>
+                        <div class="modal-field">
+                            <div class="modal-label">Description</div>
+                            <div class="modal-value">${char.desc}</div>
+                        </div>
+                        <div class="modal-field">
+                            <div class="modal-label">Example</div>
+                            <div class="modal-example">"${char.example}"</div>
+                        </div>
+                        <div class="modal-field">
+                            <div class="modal-label">Properties</div>
+                            <div class="modal-value">${char.isInvisible ? '✓ Invisible' : ''} ${char.isBiDi ? ' ✓ BiDi Control' : ''}</div>
+                        </div>
+                    `;
+                    modal.classList.add('active');
+                });
+
+                characterGrid.appendChild(card);
+            });
+        }
+
+        function updateTestOutput() {
+            const text = testInput.value;
+            visualOutput.textContent = text || '(empty)';
+            
+            if (text) {
+                const hexBytes = Array.from(text).map(char => charToUtf8Hex(char)).join(' | ');
+                hexOutput.textContent = hexBytes;
+                
+                let highlighted = '';
+                const biDiChars = [0x200E, 0x200F, 0x061C, 0x202A, 0x202B, 0x202C, 0x202D, 0x202E, 0x2066, 0x2067, 0x2068, 0x2069];
+                const zwChars = [0x200B, 0x200C, 0x200D, 0x2060, 0x00AD, 0x2011, 0x00A0];
+                
+                for (let char of text) {
+                    const code = char.charCodeAt(0);
+                    if (biDiChars.includes(code)) {
+                        const found = charData.find(c => c.code === code);
+                        highlighted += `[${found?.abbr || 'UNKNOWN'}]`;
+                    } else if (zwChars.includes(code)) {
+                        const found = charData.find(c => c.code === code);
+                        highlighted += `[${found?.abbr || 'UNKNOWN'}]`;
+                    } else {
+                        highlighted += char;
+                    }
+                }
+                highlightOutput.textContent = highlighted;
+                
+                const visibleCount = text.replace(/[\u200B\u200C\u200D\u2060\u00AD\u2011\u00A0\u200E\u200F\u061C\u202A\u202B\u202C\u202D\u202E\u2066\u2067\u2068\u2069]/g, '').length;
+                const invisibleCount = text.length - visibleCount;
+                const biDiCount = (text.match(/[\u200E\u200F\u061C\u202A\u202B\u202C\u202D\u202E\u2066\u2067\u2068\u2069]/g) || []).length;
+                
+                charCounter.innerHTML = `
+                    <div class="counter-item"><span class="counter-num">${text.length}</span>Total</div>
+                    <div class="counter-item"><span class="counter-num">${visibleCount}</span>Visible</div>
+                    <div class="counter-item"><span class="counter-num">${invisibleCount}</span>Invisible</div>
+                    <div class="counter-item"><span class="counter-num">${biDiCount}</span>BiDi</div>
+                `;
+                
+                const analysis = analyzeSecurityRisk(text);
+                securityBox.className = `security-box ${analysis.risk}`;
+                securityBox.innerHTML = `
+                    <div class="security-header security-${analysis.risk}">
+                        ${analysis.riskLevel}
+                    </div>
+                    ${analysis.warnings.map(w => `<div class="security-item">• ${w}</div>`).join('')}
+                `;
+                securityBox.style.display = 'block';
+            } else {
+                hexOutput.textContent = '(empty)';
+                highlightOutput.textContent = '(empty)';
+                charCounter.innerHTML = '';
+                securityBox.style.display = 'none';
+            }
+        }
+
+        searchInput.addEventListener('input', () => renderCharacters(searchInput.value));
+        testInput.addEventListener('input', updateTestOutput);
+        modalClose.addEventListener('click', () => modal.classList.remove('active'));
+        modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('active'); });
+
+        renderCharacters();
+    </script>
+</body>
+</html>

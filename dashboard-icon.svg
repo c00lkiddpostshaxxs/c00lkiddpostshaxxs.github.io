@@ -1,0 +1,20 @@
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <!-- Grid background -->
+  <rect x="8" y="8" width="48" height="48" rx="2" fill="none" stroke="#334155" stroke-width="2"/>
+  
+  <!-- Top-left square (blue) -->
+  <rect x="8" y="8" width="20" height="20" rx="1" fill="#3b82f6" stroke="#2563eb" stroke-width="1"/>
+  
+  <!-- Top-right square (green) -->
+  <rect x="36" y="8" width="20" height="20" rx="1" fill="#10b981" stroke="#059669" stroke-width="1"/>
+  
+  <!-- Bottom-left square (purple) -->
+  <rect x="8" y="36" width="20" height="20" rx="1" fill="#8b5cf6" stroke="#7c3aed" stroke-width="1"/>
+  
+  <!-- Bottom-right square (pink) -->
+  <rect x="36" y="36" width="20" height="20" rx="1" fill="#ec4899" stroke="#db2777" stroke-width="1"/>
+  
+  <!-- Center cross dividers -->
+  <path d="M 32 8 L 32 56" stroke="#475569" stroke-width="1"/>
+  <path d="M 8 32 L 56 32" stroke="#475569" stroke-width="1"/>
+</svg>
